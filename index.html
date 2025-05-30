@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4CAF50">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسہ ریکارڈ - ماہانہ</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --danger-color: #f44336;
+            --secondary-color: #f8f9fa;
+            --border-color: #ddd;
+            --text-color: #333;
+            --sabqi-day-color: #e6f7ff;
+            --holiday-color: #ffebee;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 10px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        
+        button {
+            padding: 5px 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            padding: 2px 5px;
+            font-size: 10px;
+            margin-right: 5px;
+        }
+        
+        .month-range {
+            text-align: center;
+            font-weight: bold;
+            margin: 5px 0;
+            padding: 5px;
+            font-size: 13px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            max-height: 80vh;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 3px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+            position: sticky;
+            top: 0;
+        }
+        
+        .sabqi-day {
+            background-color: var(--sabqi-day-color);
+        }
+        
+        .holiday {
+            background-color: var(--holiday-color);
+        }
+        
+        .student-name-cell {
+            background-color: var(--secondary-color);
+            font-weight: bold;
+            white-space: nowrap;
+            width: 100px;
+            position: sticky;
+            left: 0;
+        }
+        
+        .student-name {
+            display: inline-block;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+        
+        .serial-number {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            margin-left: 3px;
+            font-weight: bold;
+        }
+        
+        .serial-in-cell {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 10px;
+            color: #999;
+            font-weight: bold;
+        }
+        
+        .day-cell {
+            width: 70px;
+            min-width: 70px;
+            max-width: 70px;
+            padding: 2px;
+            position: relative;
+        }
+        
+        .checkbox-container {
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        input[type="checkbox"] {
+            transform: scale(1.1);
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .comment-box {
+            width: 65px;
+            height: 22px;
+            font-size: 11px;
+            padding: 2px 5px;
+            margin-top: 2px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+        }
+        
+        .sabqi-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="margin:5px;font-size:1.2em">مدرسہ ریکارڈ - ماہانہ</h1>
+        </div>
+        
+        <div class="controls">
+            <button id="prevMonth">← پچھلا مہینہ</button>
+            <button id="currentMonth">موجودہ مہینہ</button>
+            <button id="nextMonth">اگلا مہینہ →</button>
+            <button id="saveData">محفوظ کریں</button>
+            <button id="addStudent">نیا طالب علم</button>
+        </div>
+        
+        <div class="month-range" id="currentMonthRange"></div>
+        
+        <div class="table-container">
+            <table id="attendanceTable">
+                <thead>
+                    <tr id="datesHeader"></tr>
+                </thead>
+                <tbody id="studentsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // موجودہ مہینہ کا تعین
+        let currentMonthStart = new Date();
+        currentMonthStart.setDate(1);
+        currentMonthStart.setHours(0, 0, 0, 0);
+        
+        // طلباء کا ڈیٹا
+        let students = JSON.parse(localStorage.getItem('madrasa_students')) || [
+            { id: 1, name: 'احمد' },
+            { id: 2, name: 'محمد' },
+            { id: 3, name: 'علی' }
+        ];
+        
+        // حاضری اور کمنٹس کا ڈیٹا
+        let attendanceData = JSON.parse(localStorage.getItem('madrasa_attendance')) || {};
+        let commentsData = JSON.parse(localStorage.getItem('madrasa_comments')) || {};
+
+        // ایپ کو شروع کرنا
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMonth();
+            renderStudents();
+            
+            // کنٹرولز کے ایونٹ لسٹنرز
+            document.getElementById('prevMonth').addEventListener('click', function() {
+                currentMonthStart.setMonth(currentMonthStart.getMonth() - 1);
+                renderMonth();
+                renderStudents();
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', function() {
+                currentMonthStart.setMonth(currentMonthStart.getMonth() + 1);
+                renderMonth();
+                renderStudents();
+            });
+            
+            document.getElementById('currentMonth').addEventListener('click', function() {
+                currentMonthStart = new Date();
+                currentMonthStart.setDate(1);
+                renderMonth();
+                renderStudents();
+            });
+            
+            document.getElementById('saveData').addEventListener('click', saveData);
+            document.getElementById('addStudent').addEventListener('click', addStudent);
+        });
+
+        // مہینے کو ظاہر کرنا
+        function renderMonth() {
+            const monthRangeElement = document.getElementById('currentMonthRange');
+            const datesHeader = document.getElementById('datesHeader');
+            datesHeader.innerHTML = '<th class="student-name-cell">نام</th>';
+            
+            // مہینے کے تمام دنوں کا تعین
+            const monthName = currentMonthStart.toLocaleDateString('ur-PK', { month: 'long', year: 'numeric' });
+            const daysInMonth = new Date(
+                currentMonthStart.getFullYear(), 
+                currentMonthStart.getMonth() + 1, 
+                0
+            ).getDate();
+            
+            monthRangeElement.textContent = `ماہ: ${monthName}`;
+            
+            // ہر دن کے لیے کالم بنائیں (جمعرات کو بھی شامل کریں)
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentMonthStart.getFullYear(), currentMonthStart.getMonth(), day);
+                const dayName = date.toLocaleDateString('ur-PK', { weekday: 'long' });
+                
+                const th = document.createElement('th');
+                th.innerHTML = `${dayName}<br>${formatDate(date)}`;
+                th.dataset.date = date.toISOString().split('T')[0];
+                th.dataset.day = dayName;
+                
+                // اتوار اور بدھ کو نیلے رنگ سے نمایاں کریں (سبقی کے دن)
+                if (dayName === 'اتوار' || dayName === 'بدھ') {
+                    th.classList.add('sabqi-day');
+                }
+                
+                // جمعرات کو چھٹی کے طور پر نمایاں کریں
+                if (dayName === 'جمعرات') {
+                    th.classList.add('holiday');
+                }
+                
+                datesHeader.appendChild(th);
+            }
+        }
+
+        // طلباء کو ظاہر کرنا
+        function renderStudents() {
+            const tbody = document.getElementById('studentsBody');
+            tbody.innerHTML = '';
+            
+            const dateElements = document.querySelectorAll('#datesHeader th:not(:first-child)');
+            
+            // ہر طالب علم کے لیے دو قطاریں بنانا
+            students.forEach((student, index) => {
+                const serialNumber = index + 1;
+                
+                // سبق کی قطار
+                const lessonRow = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.className = 'student-name-cell';
+                nameCell.rowSpan = 2;
+                
+                // ڈیلیٹ بٹن
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn-danger';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.title = 'حذف کریں';
+                deleteBtn.addEventListener('click', () => deleteStudent(student.id));
+                
+                // طالب علم کا نام
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'student-name';
+                nameSpan.textContent = student.name;
+                
+                // سیریل نمبر
+                const serialSpan = document.createElement('span');
+                serialSpan.className = 'serial-number';
+                serialSpan.textContent = serialNumber;
+                
+                nameCell.appendChild(deleteBtn);
+                nameCell.appendChild(nameSpan);
+                nameCell.appendChild(serialSpan);
+                lessonRow.appendChild(nameCell);
+                
+                // ہر دن کے لیے چیک باکس اور کمنٹ باکس بنانا
+                dateElements.forEach((th, dayIndex) => {
+                    const date = th.dataset.date;
+                    const dayName = th.dataset.day;
+                    
+                    const cell = document.createElement('td');
+                    cell.className = 'day-cell';
+                    if (dayName === 'اتوار' || dayName === 'بدھ') {
+                        cell.classList.add('sabqi-day');
+                    }
+                    if (dayName === 'جمعرات') {
+                        cell.classList.add('holiday');
+                    }
+                    
+                    // ہر تیسرے دن کے خانے میں سیریل نمبر شامل کریں
+                    if ((dayIndex + 1) % 3 === 0) {
+                        const serialInCell = document.createElement('div');
+                        serialInCell.className = 'serial-in-cell';
+                        serialInCell.textContent = serialNumber;
+                        cell.appendChild(serialInCell);
+                    }
+                    
+                    // چیک باکس کنٹینر
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.className = 'checkbox-container';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.dataset.studentId = student.id;
+                    checkbox.dataset.date = date;
+                    checkbox.dataset.type = 'lesson';
+                    
+                    // اگر پہلے سے ڈیٹا موجود ہے تو چیک باکس کو چیک کریں
+                    const key = `${student.id}_${date}_lesson`;
+                    if (attendanceData[key]) {
+                        checkbox.checked = true;
+                    }
+                    
+                    // جمعرات کو ڈس ایبل کریں
+                    if (dayName === 'جمعرات') {
+                        checkbox.disabled = true;
+                    }
+                    
+                    checkboxContainer.appendChild(checkbox);
+                    cell.appendChild(checkboxContainer);
+                    
+                    // کمنٹ باکس
+                    const commentBox = document.createElement('input');
+                    commentBox.type = 'text';
+                    commentBox.className = 'comment-box';
+                    commentBox.placeholder = 'پارہ, رکوع';
+                    commentBox.dataset.studentId = student.id;
+                    commentBox.dataset.date = date;
+                    commentBox.dataset.type = 'lesson';
+                    
+                    // اگر پہلے سے کمنٹ موجود ہے تو بھریں
+                    const commentKey = `${student.id}_${date}_lesson_comment`;
+                    if (commentsData[commentKey]) {
+                        commentBox.value = commentsData[commentKey];
+                    }
+                    
+                    // جمعرات کو ڈس ایبل کریں
+                    if (dayName === 'جمعرات') {
+                        commentBox.disabled = true;
+                        commentBox.value = 'چھٹی';
+                    }
+                    
+                    cell.appendChild(commentBox);
+                    lessonRow.appendChild(cell);
+                });
+                
+                tbody.appendChild(lessonRow);
+                
+                // سبقی/منزل کی قطار
+                const sabqiRow = document.createElement('tr');
+                
+                // ہر دن کے لیے چیک باکس اور کمنٹ باکس بنانا
+                dateElements.forEach((th, dayIndex) => {
+                    const date = th.dataset.date;
+                    const dayName = th.dataset.day;
+                    
+                    const cell = document.createElement('td');
+                    cell.className = 'day-cell';
+                    if (dayName === 'اتوار' || dayName === 'بدھ') {
+                        cell.classList.add('sabqi-day');
+                    }
+                    if (dayName === 'جمعرات') {
+                        cell.classList.add('holiday');
+                    }
+                    
+                    // ہر تیسرے دن کے خانے میں سیریل نمبر شامل کریں
+                    if ((dayIndex + 1) % 3 === 0) {
+                        const serialInCell = document.createElement('div');
+                        serialInCell.className = 'serial-in-cell';
+                        serialInCell.textContent = serialNumber;
+                        cell.appendChild(serialInCell);
+                    }
+                    
+                    // چیک باکس کنٹینر
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.className = 'checkbox-container';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.dataset.studentId = student.id;
+                    checkbox.dataset.date = date;
+                    checkbox.dataset.type = 'sabqi';
+                    
+                    // اگر پہلے سے ڈیٹا موجود ہے تو چیک باکس کو چیک کریں
+                    const key = `${student.id}_${date}_sabqi`;
+                    if (attendanceData[key]) {
+                        checkbox.checked = true;
+                    }
+                    
+                    // جمعرات کو ڈس ایبل کریں
+                    if (dayName === 'جمعرات') {
+                        checkbox.disabled = true;
+                    }
+                    
+                    checkboxContainer.appendChild(checkbox);
+                    cell.appendChild(checkboxContainer);
+                    
+                    // دن کے مطابق لیبل
+                    const label = document.createElement('div');
+                    label.className = 'sabqi-label';
+                    label.textContent = (dayName === 'اتوار' || dayName === 'بدھ') ? 'سبقی' : 'منزل';
+                    
+                    // جمعرات کو چھٹی دکھائیں
+                    if (dayName === 'جمعرات') {
+                        label.textContent = 'چھٹی';
+                    }
+                    
+                    cell.appendChild(label);
+                    
+                    // کمنٹ باکس
+                    const commentBox = document.createElement('input');
+                    commentBox.type = 'text';
+                    commentBox.className = 'comment-box';
+                    commentBox.placeholder = 'پارہ, رکوع';
+                    commentBox.dataset.studentId = student.id;
+                    commentBox.dataset.date = date;
+                    commentBox.dataset.type = 'sabqi';
+                    
+                    // اگر پہلے سے کمنٹ موجود ہے تو بھریں
+                    const commentKey = `${student.id}_${date}_sabqi_comment`;
+                    if (commentsData[commentKey]) {
+                        commentBox.value = commentsData[commentKey];
+                    }
+                    
+                    // جمعرات کو ڈس ایبل کریں
+                    if (dayName === 'جمعرات') {
+                        commentBox.disabled = true;
+                        commentBox.value = 'چھٹی';
+                    }
+                    
+                    cell.appendChild(commentBox);
+                    sabqiRow.appendChild(cell);
+                });
+                
+                tbody.appendChild(sabqiRow);
+            });
+        }
+
+        // طالب علم حذف کرنا
+        function deleteStudent(studentId) {
+            if (confirm(`کیا آپ واقعی اس طالب علم کو حذف کرنا چاہتے ہیں؟ تمام ڈیٹا بھی حذف ہو جائے گا۔`)) {
+                // طالب علم کو لسٹ سے حذف کریں
+                students = students.filter(student => student.id !== studentId);
+                
+                // متعلقہ ڈیٹا حذف کریں
+                Object.keys(attendanceData).forEach(key => {
+                    if (key.startsWith(`${studentId}_`)) {
+                        delete attendanceData[key];
+                    }
+                });
+                
+                Object.keys(commentsData).forEach(key => {
+                    if (key.startsWith(`${studentId}_`)) {
+                        delete commentsData[key];
+                    }
+                });
+                
+                // ڈیٹا محفوظ کریں اور ٹیبل دوبارہ رینڈر کریں
+                saveData();
+                renderStudents();
+            }
+        }
+
+        // ڈیٹا کو محفوظ کرنا
+        function saveData() {
+            // چیک باکسز کا ڈیٹا محفوظ کریں
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                const key = `${checkbox.dataset.studentId}_${checkbox.dataset.date}_${checkbox.dataset.type}`;
+                attendanceData[key] = checkbox.checked;
+            });
+            
+            // کمنٹ باکسز کا ڈیٹا محفوظ کریں
+            const commentBoxes = document.querySelectorAll('.comment-box');
+            commentBoxes.forEach(box => {
+                const key = `${box.dataset.studentId}_${box.dataset.date}_${box.dataset.type}_comment`;
+                commentsData[key] = box.value;
+            });
+            
+localStorage.setItem('madrasa_attendance', JSON.stringify(attendanceData));
+            localStorage.setItem('madrasa_comments', JSON.stringify(commentsData));
+            localStorage.setItem('madrasa_students', JSON.stringify(students));
+            alert('ڈیٹا محفوظ ہو گیا!');
+        }
+
+        // نئے طالب علم کو شامل کرنا
+        function addStudent() {
+            const name = prompt('نیا طالب علم شامل کریں\nنام درج کریں:');
+            if (name && name.trim()) {
+                // چیک کریں کہ یہ نام پہلے سے موجود نہ ہو
+                const existingStudent = students.find(student => student.name.trim().toLowerCase() === name.trim().toLowerCase());
+                
+                if (existingStudent) {
+                    alert('یہ نام پہلے سے موجود ہے!');
+                    return;
+                }
+                
+                const newId = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
+                students.push({ id: newId, name: name.trim() });
+                saveData();
+                renderStudents();
+            } else if (name !== null) {
+                alert('براہ کرم درست نام درج کریں!');
+            }
+        }
+
+        // ہیلپر فنکشنز
+        function formatDate(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            return `${day}-${month}`;
+        }
+    </script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+        .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+            console.error('Service Worker registration failed:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
