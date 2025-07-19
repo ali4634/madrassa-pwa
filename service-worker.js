@@ -1,34 +1,20 @@
- const staticCacheName = 'site-static-v5'; // ورژن نمبر بدل دیا ہے تاکہ یہ اپ ڈیٹ ہو
-const dynamicCacheName = 'site-dynamic-v5';
+ // کیش کا نام اور ورژن۔ جب بھی آپ فائلیں بدلیں تو اس ورژن کو بدل دیں (v1 سے v2، پھر v3)
+const staticCacheName = 'site-static-v3';
 
-// سروس ورکر کو انسٹال کرتے وقت کیش کی جانے والی فائلیں
+// وہ فائلیں جو آپ کی ریپوزٹری میں ہیں اور آف لائن چلنے کے لیے ضروری ہیں
 const assets = [
-    '/madrassa-pwa/',
+    '/madrassa-pwa/', // یہ آپ کی ایپ کا روٹ (root) ہے
     '/madrassa-pwa/index.html',
-    '/madrassa-pwa/js/app.js',
-    '/madrassa-pwa/js/ui.js',
-    '/madrassa-pwa/js/materialize.min.js',
-    '/madrassa-pwa/css/styles.css',
-    '/madrassa-pwa/css/materialize.min.css',
-    '/madrassa-pwa/img/dish.png',
-    'https://fonts.googleapis.com/icon?family=Material+Icons',
-    'https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
-    '/madrassa-pwa/pages/fallback.html',
-    '/madrassa-pwa/manifest.json' // مینی فیسٹ کو بھی کیش کر لیں
+    '/madrassa-pwa/manifest.json',
+    '/madrassa-pwa/icon-192.png',
+    '/madrassa-pwa/icon-512.png',
+    // --- اگر آپ کی ایپ میں CSS یا JS فائلیں ہیں تو انہیں بھی یہاں شامل کریں ---
+    // مثال کے طور پر:
+    // '/madrassa-pwa/css/styles.css',
+    // '/madrassa-pwa/js/app.js'
 ];
 
-// کیش کا سائز محدود کرنے کی فنکشن
-const limitCacheSize = (name, size) => {
-    caches.open(name).then(cache => {
-        cache.keys().then(keys => {
-            if(keys.length > size){
-                cache.delete(keys[0]).then(() => limitCacheSize(name, size));
-            }
-        });
-    });
-};
-
-// انسٹال ایونٹ
+// انسٹال ایونٹ: سروس ورکر انسٹال ہوتے وقت یہ تمام فائلیں کیش کر لیتا ہے
 self.addEventListener('install', evt => {
     evt.waitUntil(
         caches.open(staticCacheName).then(cache => {
@@ -38,40 +24,25 @@ self.addEventListener('install', evt => {
     );
 });
 
-// ایکٹیویٹ ایونٹ
+// ایکٹیویٹ ایونٹ: پرانے کیش کو صاف کرتا ہے
 self.addEventListener('activate', evt => {
     evt.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(keys
-                .filter(key => key !== staticCacheName && key !== dynamicCacheName)
+                .filter(key => key !== staticCacheName)
                 .map(key => caches.delete(key))
             );
         })
     );
 });
 
-// فیچ ایونٹ (سب سے اہم)
+// فیچ ایونٹ: جب ایپ کوئی فائل مانگتی ہے تو یہ ایونٹ چلتا ہے
 self.addEventListener('fetch', evt => {
-    if(evt.request.url.indexOf('firestore.googleapis.com') === -1){ // اگر فائر اسٹور کی ریکویسٹ نہ ہو
-        evt.respondWith(
-            caches.match(evt.request).then(cacheRes => {
-                // اگر کیش میں ہے تو وہیں سے دیں
-                return cacheRes || fetch(evt.request).then(fetchRes => {
-                    // اگر کیش میں نہیں تو نیٹ ورک سے لائیں اور ڈائنامک کیش میں ڈال دیں
-                    return caches.open(dynamicCacheName).then(cache => {
-                        cache.put(evt.request.url, fetchRes.clone());
-                        limitCacheSize(dynamicCacheName, 15);
-                        return fetchRes;
-                    });
-                });
-            }).catch(() => {
-                // اگر نیٹ ورک فیل ہو جائے تو فال بیک پیج دکھائیں
-                if(evt.request.url.indexOf('.html') > -1){
-                    return caches.match('/madrassa-pwa/pages/fallback.html');
-                }
-            })
-        );
-    }
-});```
-
-       ۔
+    evt.respondWith(
+        // پہلے کیش میں تلاش کرو
+        caches.match(evt.request).then(cacheRes => {
+            // اگر فائل کیش میں موجود ہے تو وہیں سے دے دو، ورنہ انٹرنیٹ سے لاؤ
+            return cacheRes || fetch(evt.request);
+        })
+    );
+});
