@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>مفصل حاضری و سبق رجسٹر</title>
     
-    <!-- =================================================================== -->
-    <!-- PWA (Progressive Web App) کے لیے ضروری کوڈ ۔ یہ آئیکنز اور مینی فیسٹ کے لیے ہے -->
-    <!-- =================================================================== -->
+    <!-- PWA Manifest and Icons -->
     <meta name="theme-color" content="#3498db"/>
-    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D9%88%20%D8%B3%D8%A8%D9%82%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22short_name%22%3A%22%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f5f7fa%22%2C%22theme_color%22%3A%22%233498db%22%2C%22description%22%3A%22%D8%B7%D9%84%D8%A8%D8%A7%D8%A1%20%DA%A9%DB%8C%20%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D8%A7%D9%88%D8%B1%20%D8%B3%D8%A8%D9%82%20%DA%A9%D8%A7%20%DA%88%DB%8C%D8%AC%DB%8C%D9%B9%D9%84%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAyJJREFUeJzt3cFNw2AUAFAx%2F%2F8%2F3gRKWzAlIKSr6rG%2BP4YgPjp4bNf%2FXwAAAPghCKwBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAID%2FA3y5A%2FC%2FSdSgAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAAD0fxzLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMhSURBVHhe7d3BEYAwEATAxP8v%2ByE9EAZmwT1bNbsmAAAA%2FG%2BqWpXVAAAA%2FiZAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIENi3Af4PAADAl2oW%2FwF4%2FM%2FlAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
-    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAyJJREFUeJzt3cFNw2AUAFAx//8/3gRKWzAlIKSr6rG+P4YgPjp4bNf/XwAAAPghCKwBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAID/A3y5A/C/SdSgAAAAAElFTkSuQmCC">
+    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D9%88%20%D8%B3%D8%A8%D9%82%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22short_name%22%3A%22%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f5f7fa%22%2C%22theme_color%22%3A%22%233498db%22%2C%22description%22%3A%22%D8%B7%D9%84%D8%A8%D8%A7%D8%A1%20%DA%A9%DB%8C%20%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D8%A7%D9%88%D8%B1%20%D8%B3%D8%A8%D9%82%20%DA%A9%D8%A7%20%DA%88%DB%8C%D8%AC%DB%8C%D9%B9%D9%84%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAyJJREFUeJzt3cFNw2AUAFAx%2F%2F8%2F3gRKWzAlIKSr6rG%2BP4YgPjp4bNf%2FXwAAAPghCKwBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAID%2FA3y5A%2FC%2FSdSgAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAAD0fxzLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMhSURBVHhe7d3BEYAwEATAxP8v%2ByE9EAZmwT1bNbsmAAAA%2FG%2BqWpXVAAAA%2FiZAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIENi3Af4PAADAl2oW%2FwF4%2FM%2FlAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAyJJREFUeJzt3cFNw2AUAFAx//8/3gRKWzAlIKSr6rG+P4YgPjp4bNf/XwAAAPghCKwBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAID/A3y5A/C/SdSgAAAAAElFTkSuQmCC">
     
+    <!-- Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <!-- *** نئی لائبریری جو اردو PDF کے لیے ضروری ہے *** -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
+        /* CSS میں کوئی تبدیلی نہیں */
         :root {
             --primary-color: #3498db; --secondary-color: #2980b9; --success-color: #27ae60;
             --danger-color: #e74c3c; --warning-color: #f39c12; --light-color: #ecf0f1;
@@ -121,25 +123,27 @@
     <div id="toast-notification">ڈیٹا محفوظ ہوگیا</div>
 
 <script>
-// PWA Service Worker Registration - سنگل فائل کے لیے
+// PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
     const swCode = `
-        const CACHE_NAME = 'attendance-register-cache-v3';
-        const urlsToCache = ['./', 'index.html'];
+        const CACHE_NAME = 'attendance-register-cache-v4'; // ورژن اپ ڈیٹ کریں
+        const urlsToCache = [
+            './',
+            'index.html',
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+        ];
         self.addEventListener('install', event => {
-            event.waitUntil(
-                caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-            );
+            event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
         });
         self.addEventListener('fetch', event => {
-            event.respondWith(
-                caches.match(event.request).then(response => response || fetch(event.request))
-            );
+            event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
         });
     `;
     const swBlob = new Blob([swCode], { type: 'application/javascript' });
     const swUrl = URL.createObjectURL(swBlob);
-
     window.addEventListener('load', () => {
         navigator.serviceWorker.register(swUrl)
             .then(reg => console.log('Service worker registered!', reg))
@@ -151,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // جاوا اسکرپٹ کا بقیہ حصہ
     let currentDate = new Date();
     let attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
-    const DATA_KEY = 'attendanceData_v5_final';
+    const DATA_KEY = 'attendanceData_v6_urdu_pdf';
     let currentModalInfo = {};
 
     function showToast(message) {
@@ -180,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch { console.error("Failed to parse data."); }
         }
         if (!attendanceData.studentDetails) attendanceData.studentDetails = {};
-        document.getElementById('section-selector').value = localStorage.getItem('lastSection_v5') || 'section1';
+        document.getElementById('section-selector').value = localStorage.getItem('lastSection_v6') || 'section1';
         updateDateDisplay();
         loadAttendanceData();
     }
@@ -205,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const existingRecords = attendanceData.sections[section].attendance[dateStr] || [];
             attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existingRecords[i] || defaultRecord());
         }
-
         renderAttendanceTable();
         renderStudentList();
         updateStats();
@@ -216,10 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const section = document.getElementById('section-selector').value;
         const tableBody = document.querySelector('#attendance-table tbody');
         tableBody.innerHTML = '';
-        
         const students = attendanceData.sections[section]?.students || [];
         const attendanceRecords = attendanceData.sections[section]?.attendance[dateStr] || [];
-        
         students.forEach((student, index) => {
             const record = attendanceRecords[index] || {};
             const studentDetail = attendanceData.studentDetails[student] || {};
@@ -252,13 +253,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const section = document.getElementById('section-selector').value;
         const dateStr = currentDate.toISOString().split('T')[0];
         const record = attendanceData.sections[section].attendance[dateStr][index];
-        
         record[field] = event.target.checked;
-        
         if (field === 'present' && !event.target.checked) {
             record.lesson = record.homework = record.milestone = false;
         }
-        
         renderAttendanceTable();
         saveData();
         updateStats();
@@ -283,7 +281,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const students = attendanceData.sections[section]?.students || [];
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
         let presentNames = [], absentNames = [], lessonNames = [], homeworkNames = [], milestoneNames = [];
-        
         students.forEach((student, index) => {
             const rec = records[index];
             if (rec?.present) {
@@ -293,7 +290,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (rec.milestone) milestoneNames.push(student);
             } else { absentNames.push(student); }
         });
-        
         document.getElementById('total-students').textContent = students.length;
         document.getElementById('present-count').textContent = presentNames.length;
         document.getElementById('absent-count').textContent = students.length - presentNames.length;
@@ -313,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (studentIndex === -1) return report;
         const attendance = attendanceData.sections[section]?.attendance || {};
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-
         for (let day = 1; day <= daysInMonth; day++) {
             const dateObj = new Date(year, month, day);
             const dateStr = dateObj.toISOString().split('T')[0];
@@ -328,19 +323,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return report;
     }
 
-    // *** واٹس ایپ میسج کے لیے نیا اور بہتر فنکشن ***
     function generateWhatsAppReportText(reportData, reportTitle) {
         const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays/reportData.totalDays)*100) : 0;
         let reportText = `*${reportTitle}*\n\n`;
         reportText += `*خلاصہ:* ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)\n`;
         reportText += `-----------------------------------\n`;
-
         reportData.records.filter(r => r.present).forEach(rec => {
             const date = new Date(rec.date).toLocaleDateString('ur-PK', {day: 'numeric', month: 'long'});
             const lesson = rec.lesson ? (rec.lessonQuantity || '✔') : '✘';
             const homework = rec.homework ? (rec.homeworkQuantity || '✔') : '✘';
             const milestone = rec.milestone ? (rec.milestoneQuantity || '✔') : '✘';
-            
             reportText += `*تاریخ: ${date}*\n`;
             reportText += `▫️ *سبق:* ${lesson}\n`;
             reportText += `▫️ *سبقی:* ${homework}\n`;
@@ -357,6 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const reportTitle = `${studentName} کی رپورٹ (${new Date(year, month).toLocaleString('ur-PK', { month: 'long', year: 'numeric' })})`;
         document.getElementById('student-report-title').textContent = reportTitle;
         const reportData = generateMonthlyReportFor(studentName, month, year, section);
+        const reportContent = document.getElementById('student-report-content');
+        reportContent.innerHTML = ''; // Clear previous content
         let tableHTML = `<table style="font-size:0.9em;width:100%;"><thead><tr><th>تاریخ</th><th>حاضری</th><th>سبق</th><th>سبقی</th><th>منزل</th></tr></thead><tbody>`;
         reportData.records.forEach(rec => {
             tableHTML += `<tr class="${rec.present ? 'present-row' : 'absent-row'}">
@@ -367,44 +361,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${rec.present ? (rec.milestone ? (rec.milestoneQuantity || '✔') : '✘') : '-'}</td>
             </tr>`;
         });
-
-        document.getElementById('student-report-content').innerHTML = tableHTML + '</tbody></table>';
+        reportContent.innerHTML = tableHTML + '</tbody></table>';
         const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays/reportData.totalDays)*100) : 0;
         document.getElementById('student-report-summary').textContent = `خلاصہ: ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)`;
-        
         document.getElementById('modal-share-whatsapp').onclick = () => {
              const reportText = generateWhatsAppReportText(reportData, reportTitle);
-             const encodedText = encodeURIComponent(reportText);
-             window.open(`https://api.whatsapp.com/send?text=${encodedText}`);
+             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(reportText)}`);
         };
-
-        document.getElementById('modal-share-pdf').onclick = () => shareAsPDF(studentName, reportData, reportTitle);
-        
+        document.getElementById('modal-share-pdf').onclick = () => shareAsUrduPDF(studentName, reportData, reportTitle);
         openModal('student-monthly-report-modal');
     }
 
-    async function shareAsPDF(studentName, reportData, title) {
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const engTitle = `${studentName}'s Report (${new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })})`;
-            const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays / reportData.totalDays) * 100) : 0;
-            doc.text(engTitle, 105, 15, { align: 'center' });
-            doc.text(`Summary: ${reportData.presentDays}/${reportData.totalDays} days present (${presentPercent}%)`, 105, 22, { align: 'center' });
-            const head = [['Date', 'Present', 'Sabaq', 'Sabqi', 'Manzil']];
-            const body = reportData.records.map(r => [ 
-                new Date(r.date).toLocaleDateString('en-GB'),
-                r.present ? 'Yes' : 'No',
-                r.present ? (r.lesson ? (r.lessonQuantity || 'Yes') : 'No') : '-',
-                r.present ? (r.homework ? (r.homeworkQuantity || 'Yes') : 'No') : '-',
-                r.present ? (r.milestone ? (r.milestoneQuantity || 'Yes') : 'No') : '-'
-            ]);
-            doc.autoTable({ head, body, startY: 30 });
-            doc.save(`${studentName}_report.pdf`);
-        } catch(e) { 
-            console.error("PDF creation error", e); 
-            alert("پی ڈی ایف بنانے میں خرابی ہوئی ہے۔\nError: " + e.message); 
-        }
+    // *** اردو PDF بنانے کے لیے نیا فنکشن ***
+    async function shareAsUrduPDF(studentName, reportData, title) {
+        showToast('PDF بنائی جا رہی ہے...');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const reportElement = document.getElementById('student-report-content');
+        const reportTitle = document.getElementById('student-report-title');
+        const reportSummary = document.getElementById('student-report-summary');
+
+        // Capture the title
+        const canvasTitle = await html2canvas(reportTitle, { scale: 2, backgroundColor: null });
+        const imgDataTitle = canvasTitle.toDataURL('image/png');
+        pdf.addImage(imgDataTitle, 'PNG', 10, 10, 190, 0);
+
+        // Capture the summary
+        const canvasSummary = await html2canvas(reportSummary, { scale: 2, backgroundColor: null });
+        const imgDataSummary = canvasSummary.toDataURL('image/png');
+        pdf.addImage(imgDataSummary, 'PNG', 10, 25, 190, 0);
+        
+        // Capture the main table content
+        const canvasContent = await html2canvas(reportElement, { scale: 2 });
+        const imgDataContent = canvasContent.toDataURL('image/png');
+        
+        const imgProps = pdf.getImageProperties(imgDataContent);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgDataContent, 'PNG', 10, 40, pdfWidth - 20, pdfHeight);
+        pdf.save(`${studentName}_report.pdf`);
     }
     
     function openModal(modalId, info = {}) {
@@ -438,17 +434,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('date-picker').addEventListener('change', function() { const [y,m,d] = this.value.split('-'); currentDate = new Date(y, m-1, d, 12); updateDateDisplay(); loadAttendanceData(); });
     document.getElementById('next-day-btn').addEventListener('click', function() { currentDate.setDate(currentDate.getDate() + 1); updateDateDisplay(); loadAttendanceData(); });
     document.getElementById('prev-day-btn').addEventListener('click', function() { currentDate.setDate(currentDate.getDate() - 1); updateDateDisplay(); loadAttendanceData(); });
-    document.getElementById('section-selector').addEventListener('change', function() { localStorage.setItem('lastSection_v5', this.value); initApp(); });
-    
+    document.getElementById('section-selector').addEventListener('change', function() { localStorage.setItem('lastSection_v6', this.value); initApp(); });
     document.querySelector('#attendance-table tbody').addEventListener('change', function(event) { if (event.target.classList.contains('attendance-check')) handleCheckboxChange(event); });
-
     document.querySelector('#attendance-table tbody').addEventListener('click', function(event) {
         const target = event.target.closest('[data-action], .student-name-clickable, .quantity-info');
         if (!target) return;
-
         const action = target.dataset.action;
         const studentName = target.dataset.studentName;
-
         if (action === 'share-whatsapp') {
             event.stopPropagation();
             const phone = target.dataset.phone;
@@ -458,22 +450,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const reportTitle = `${studentName} کی رپورٹ (${new Date(year, month).toLocaleString('ur-PK', { month: 'long', year: 'numeric' })})`;
             const reportData = generateMonthlyReportFor(studentName, month, year, section);
             const reportText = generateWhatsAppReportText(reportData, reportTitle);
-            const encodedText = encodeURIComponent(reportText);
-            window.open(`https://api.whatsapp.com/send?phone=${phone.replace(/\s/g, '')}&text=${encodedText}`);
+            window.open(`https://api.whatsapp.com/send?phone=${phone.replace(/\s/g, '')}&text=${encodeURIComponent(reportText)}`);
             return;
         }
-        
         if (target.classList.contains('student-name-clickable')) {
             showStudentMonthlyReportModal(studentName);
             return;
         }
-
         const index = parseInt(target.dataset.index);
         const section = document.getElementById('section-selector').value;
         const currentStudentName = attendanceData.sections[section].students[index];
         const dateStr = currentDate.toISOString().split('T')[0];
         const record = attendanceData.sections[section].attendance[dateStr][index];
-
         if (target.classList.contains('quantity-info')) {
             const field = target.dataset.field;
             openModal('quantity-modal', { index, field, currentValue: record[field] || '', studentName: currentStudentName, fieldName: field });
@@ -485,7 +473,6 @@ document.addEventListener('DOMContentLoaded', function() {
             openModal('name-modal', { index, studentName: currentStudentName, currentValue: currentStudentName });
         }
     });
-
     document.getElementById('save-quantity').addEventListener('click', function() { const { index, field } = currentModalInfo; const section = document.getElementById('section-selector').value; const dateStr = currentDate.toISOString().split('T')[0]; const value = document.getElementById('quantity-input').value; attendanceData.sections[section].attendance[dateStr][index][field] = value; if (value.trim() !== '') { if (field === 'lessonQuantity') attendanceData.sections[section].attendance[dateStr][index].lesson = true; else if (field === 'homeworkQuantity') attendanceData.sections[section].attendance[dateStr][index].homework = true; else if (field === 'milestoneQuantity') attendanceData.sections[section].attendance[dateStr][index].milestone = true; } saveData(); renderAttendanceTable(); updateStats(); closeModal('quantity-modal'); });
     document.getElementById('save-comment').addEventListener('click', function() { const { index } = currentModalInfo; const section = document.getElementById('section-selector').value; const dateStr = currentDate.toISOString().split('T')[0]; attendanceData.sections[section].attendance[dateStr][index].comment = document.getElementById('comment-text').value; saveData(); closeModal('comment-modal'); });
     document.getElementById('save-phone').addEventListener('click', function() { const { studentName } = currentModalInfo; if (!attendanceData.studentDetails[studentName]) attendanceData.studentDetails[studentName] = {}; attendanceData.studentDetails[studentName].phone = document.getElementById('phone-input').value; saveData(); renderAttendanceTable(); closeModal('phone-modal'); });
