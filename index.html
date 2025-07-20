@@ -134,7 +134,7 @@
 <script>
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
-    const swCode = `const CACHE_NAME = 'attendance-register-cache-v17'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'])))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
+    const swCode = `const CACHE_NAME = 'attendance-register-cache-v18'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'])))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
     const swBlob = new Blob([swCode], { type: 'application/javascript' });
     window.addEventListener('load', () => navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.error('SW reg failed: ', err)));
 }
@@ -142,7 +142,7 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();
     let attendanceData = { sections: {}, studentDetails: {} };
-    const DATA_KEY = 'attendanceData_v17_tested';
+    const DATA_KEY = 'attendanceData_v18_tested';
     let currentModalInfo = {};
 
     // --- DOM Elements ---
@@ -189,12 +189,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!Array.isArray(attendanceData.sections[sec].students)) {
                  attendanceData.sections[sec].students = [];
             }
-            if (typeof attendanceData.sections[sec].attendance !== 'object') {
+            if (typeof attendanceData.sections[sec].attendance !== 'object' || attendanceData.sections[sec].attendance === null) {
                  attendanceData.sections[sec].attendance = {};
             }
         });
         
-        sectionSelector.value = localStorage.getItem('lastSection_v17') || 'section1';
+        sectionSelector.value = localStorage.getItem('lastSection_v18') || 'section1';
     };
 
     // --- UI Rendering ---
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const section = sectionSelector.value;
         const dateStr = currentDate.toISOString().split('T')[0];
         const students = attendanceData.sections[section]?.students || [];
-        const records = attendanceData.sections[section]?.attendance[dateStr] || [];
+        const records = attendanceData.sections[section]?.attendance?.[dateStr] || [];
         
         attendanceTableBody.innerHTML = '';
         students.forEach((student, index) => {
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>
                     <span class="student-name-clickable" data-action="show-report" data-student-name="${student}">${student}</span>
                     <span class="phone-number">
-                        <i class="fas fa-edit" data-action="edit-name" data-index="${index}" title="نام بدلیں"></i>
+                        <i class="fas fa-edit" data-action="edit-name" data-student-name="${student}" title="نام بدلیں"></i>
                         <i class="fas fa-phone" data-action="edit-phone" data-student-name="${student}" title="نمبر بدلیں"></i>
                         ${phone}
                     </span>
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const section = sectionSelector.value;
         const dateStr = currentDate.toISOString().split('T')[0];
         const students = attendanceData.sections[section]?.students || [];
-        const records = attendanceData.sections[section]?.attendance[dateStr] || [];
+        const records = attendanceData.sections[section]?.attendance?.[dateStr] || [];
 
         let presentCount = 0;
         let lessonCount = 0;
@@ -401,8 +401,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const initApp = () => {
         const section = sectionSelector.value;
         const dateStr = currentDate.toISOString().split('T')[0];
-        
         const currentSectionData = attendanceData.sections[section];
+        
         if (!currentSectionData.attendance[dateStr] || currentSectionData.attendance[dateStr].length !== currentSectionData.students.length) {
             const defaultRecord = () => ({ present: false, lesson: false, homework: false, milestone: false, lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' });
             const existingRecords = currentSectionData.attendance[dateStr] || [];
@@ -429,8 +429,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('date-picker').addEventListener('change', (e) => { const [y, m, d] = e.target.value.split('-'); currentDate = new Date(y, m - 1, d, 12); initApp(); });
         document.getElementById('prev-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() - 1); initApp(); });
         document.getElementById('next-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() + 1); initApp(); });
-        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v17', sectionSelector.value); initApp(); });
+        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v18', sectionSelector.value); initApp(); });
 
+        // **درستگی**: چیک باکس کے لیے نیا اور بہتر ایونٹ لسنر
         attendanceTableBody.addEventListener('change', (e) => {
             if (e.target.classList.contains('attendance-check')) {
                 const index = parseInt(e.target.dataset.index, 10);
@@ -438,12 +439,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const section = sectionSelector.value;
                 const dateStr = currentDate.toISOString().split('T')[0];
                 const record = attendanceData.sections[section].attendance[dateStr][index];
-                
+
                 record[field] = e.target.checked;
+
                 if (field === 'present' && !e.target.checked) {
                     record.lesson = record.homework = record.milestone = false;
                 }
                 
+                // تبدیلی کو فوراً محفوظ کریں
+                saveData(); 
+
+                // اب ماڈیول کھولنے کا فیصلہ کریں
                 if (e.target.checked && field !== 'present' && !record[`${field}Quantity`]) {
                     const studentName = attendanceData.sections[section].students[index];
                     const quantityField = `${field}Quantity`;
@@ -452,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     quantityPreview.value = '1';
                     openModal('quantity-assistant-modal');
                 } else {
-                    saveData();
+                    // اگر ماڈیول نہیں کھولنا تو UI اپ ڈیٹ کریں
                     initApp();
                 }
             }
@@ -495,14 +501,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
 
                 case 'delete-student':
-                    const studentNameToDelete = target.dataset.studentName;
-                    if (confirm(`کیا آپ واقعی طالب علم "${studentNameToDelete}" کو حذف کرنا چاہتے ہیں؟`)) {
-                        const studentIndex = attendanceData.sections[section].students.indexOf(studentNameToDelete);
+                    const studentToDelete = target.dataset.studentName;
+                    if (confirm(`کیا آپ واقعی طالب علم "${studentToDelete}" کو حذف کرنا چاہتے ہیں؟`)) {
+                        const studentIndex = attendanceData.sections[section].students.indexOf(studentToDelete);
                         if (studentIndex > -1) {
                             attendanceData.sections[section].students.splice(studentIndex, 1);
-                            delete attendanceData.studentDetails[studentNameToDelete];
+                            delete attendanceData.studentDetails[studentToDelete];
                             Object.values(attendanceData.sections[section].attendance).forEach(day => {
-                                if(day.length > studentIndex) day.splice(studentIndex, 1);
+                                if(day && day.length > studentIndex) day.splice(studentIndex, 1);
                             });
                             saveData();
                             initApp();
@@ -538,13 +544,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Quantity Assistant Listeners
         document.getElementById('stepper-plus').addEventListener('click', () => {
             let val = (parseInt(quantityPreview.value.match(/^\d+/)) || 0) + 1;
-            quantityPreview.value = quantityPreview.value.replace(/^\d+/, val) || val;
+            quantityPreview.value = quantityPreview.value.replace(/^\d+/, val.toString()) || val.toString();
         });
 
         document.getElementById('stepper-minus').addEventListener('click', () => {
             let val = (parseInt(quantityPreview.value.match(/^\d+/)) || 2) - 1;
             if (val >= 1) {
-                quantityPreview.value = quantityPreview.value.replace(/^\d+/, val);
+                quantityPreview.value = quantityPreview.value.replace(/^\d+/, val.toString());
             }
         });
 
@@ -583,7 +589,9 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal('quantity-assistant-modal');
         });
 
-        // Close modals
+        const openModal = (modalId) => document.getElementById(modalId).classList.add('active');
+        const closeModal = (modalId) => document.getElementById(modalId).classList.remove('active');
+
         document.querySelectorAll('.modal .close').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal').id)));
         document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal.id); }));
     })();
