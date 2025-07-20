@@ -1,22 +1,21 @@
  {
-    "name": "Madrassa",
-    "short_name": "Madrassa",
-    "start_url": "/madrassa-pwa/",
-    "scope": "/madrassa-pwa/",
-    "display": "standalone",
-    "background_color": "#fff",
-    "description": "A simple Madrassa app",
-    "theme_color": "black",
-    "icons": [
-        {
-            "src": "/madrassa-pwa/icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/madrassa-pwa/icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "مفصل حاضری و سبق رجسٹر",
+  "short_name": "حاضری رجسٹر",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#3498db",
+  "description": "طلباء کی حاضری اور سبق کا ڈیجیٹل رجسٹر",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
