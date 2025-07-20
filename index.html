@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -134,14 +134,15 @@
 <script>
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
-    const swCode = `const CACHE_NAME = 'attendance-register-cache-v16'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'])))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
+    const swCode = `const CACHE_NAME = 'attendance-register-cache-v17'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'])))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
     const swBlob = new Blob([swCode], { type: 'application/javascript' });
     window.addEventListener('load', () => navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.error('SW reg failed: ', err)));
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    let attendanceData = { sections: {}, studentDetails: {} }; // Initial state is empty
-    const DATA_KEY = 'attendanceData_v16_tested';
+    let currentDate = new Date();
+    let attendanceData = { sections: {}, studentDetails: {} };
+    const DATA_KEY = 'attendanceData_v17_tested';
     let currentModalInfo = {};
 
     // --- DOM Elements ---
@@ -164,32 +165,36 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (e) { console.error('Data save error:', e); showToast('ڈیٹا محفوظ کرنے میں خرابی'); }
     };
     
-    // **درستگی**: ڈیٹا لوڈ کرنے کا بہتر فنکشن
     const loadData = () => {
         const savedData = localStorage.getItem(DATA_KEY);
+        let parsedData = {};
         if (savedData) {
             try {
-                const parsedData = JSON.parse(savedData);
-                if (parsedData && parsedData.sections) {
-                    attendanceData = parsedData;
-                }
+                parsedData = JSON.parse(savedData);
             } catch { 
                 console.error("خراب ڈیٹا کو پارس کرنے میں ناکامی۔"); 
+                parsedData = {};
             }
         }
         
-        // **حفاظتی چیک**: یقینی بنائیں کہ تمام سیکشنز موجود ہیں
+        attendanceData = {
+            sections: parsedData.sections || {},
+            studentDetails: parsedData.studentDetails || {}
+        };
+        
         ['section1', 'section2', 'section3'].forEach(sec => {
-            if (!attendanceData.sections[sec]) {
+            if (!attendanceData.sections[sec] || typeof attendanceData.sections[sec] !== 'object') {
                 attendanceData.sections[sec] = { students: [], attendance: {} };
             }
+            if (!Array.isArray(attendanceData.sections[sec].students)) {
+                 attendanceData.sections[sec].students = [];
+            }
+            if (typeof attendanceData.sections[sec].attendance !== 'object') {
+                 attendanceData.sections[sec].attendance = {};
+            }
         });
-
-        if (!attendanceData.studentDetails) {
-            attendanceData.studentDetails = {};
-        }
         
-        sectionSelector.value = localStorage.getItem('lastSection_v16') || 'section1';
+        sectionSelector.value = localStorage.getItem('lastSection_v17') || 'section1';
     };
 
     // --- UI Rendering ---
@@ -199,8 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const renderAttendanceTable = () => {
-        const dateStr = currentDate.toISOString().split('T')[0];
         const section = sectionSelector.value;
+        const dateStr = currentDate.toISOString().split('T')[0];
         const students = attendanceData.sections[section]?.students || [];
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
         
@@ -234,19 +239,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const renderStudentList = () => {
         const section = sectionSelector.value;
-        const students = attendanceData.sections[section]?.students || []; // حفاظتی || []
+        const students = attendanceData.sections[section]?.students || [];
         studentListContainer.innerHTML = '';
         students.forEach((student, index) => {
             const item = document.createElement('div');
             item.style.display = 'flex'; item.style.justifyContent = 'space-between'; item.style.padding = '5px'; item.style.borderBottom = '1px solid #eee';
-            item.innerHTML = `<span>${student}</span><button class="small-btn" data-action="delete-student" data-index="${index}" style="background-color: var(--danger-color); color:white;">حذف</button>`;
+            item.innerHTML = `<span>${student}</span><button class="small-btn" data-action="delete-student" data-student-name="${student}" style="background-color: var(--danger-color); color:white;">حذف</button>`;
             studentListContainer.appendChild(item);
         });
     };
     
     const renderStats = () => {
-        const dateStr = currentDate.toISOString().split('T')[0];
         const section = sectionSelector.value;
+        const dateStr = currentDate.toISOString().split('T')[0];
         const students = attendanceData.sections[section]?.students || [];
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
 
@@ -257,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (records) {
             records.forEach(record => {
-                if (record.present) {
+                if (record && record.present) {
                     presentCount++;
                     if (record.lesson) lessonCount++;
                     if (record.homework) homeworkCount++;
@@ -394,19 +399,14 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     const initApp = () => {
-        const dateStr = currentDate.toISOString().split('T')[0];
         const section = sectionSelector.value;
+        const dateStr = currentDate.toISOString().split('T')[0];
         
-        // حفاظتی چیک: یقینی بنائیں کہ سیکشن موجود ہے
-        if (!attendanceData.sections[section]) {
-            attendanceData.sections[section] = { students: [], attendance: {} };
-        }
-
-        const students = attendanceData.sections[section].students;
-        if (!attendanceData.sections[section].attendance[dateStr] || attendanceData.sections[section].attendance[dateStr].length !== students.length) {
+        const currentSectionData = attendanceData.sections[section];
+        if (!currentSectionData.attendance[dateStr] || currentSectionData.attendance[dateStr].length !== currentSectionData.students.length) {
             const defaultRecord = () => ({ present: false, lesson: false, homework: false, milestone: false, lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' });
-            const existingRecords = attendanceData.sections[section].attendance[dateStr] || [];
-            attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existingRecords[i] || defaultRecord());
+            const existingRecords = currentSectionData.attendance[dateStr] || [];
+            currentSectionData.attendance[dateStr] = Array(currentSectionData.students.length).fill(null).map((_, i) => existingRecords[i] || defaultRecord());
         }
         updateDateDisplay();
         renderAttendanceTable();
@@ -414,21 +414,11 @@ document.addEventListener('DOMContentLoaded', function() {
         renderStats();
     };
 
-    // --- Quantity Assistant Setup ---
-    const quantityPreview = document.getElementById('quantity-preview');
-    const stepperValueEl = document.getElementById('stepper-value');
-    const paraSelector = document.getElementById('para-selector');
-    paraSelector.innerHTML = '<option value="">پارہ منتخب کریں</option>';
-    for (let i = 1; i <= 30; i++) paraSelector.innerHTML += `<option value="${i}">پارہ نمبر ${i}</option>`;
-    const quickButtons = ['لائن', 'صفحہ', 'رکوع', 'آیت', 'ربع', 'آدھا', 'پون', 'سوا', 'مکمل', 'یاد'];
-    document.getElementById('quick-btns-container').innerHTML = quickButtons.map(text => `<button class="quick-btn">${text}</button>`).join('');
-    
-    // --- Modal Handling ---
-    const openModal = (modalId) => document.getElementById(modalId).classList.add('active');
-    const closeModal = (modalId) => document.getElementById(modalId).classList.remove('active');
-
-    // --- All Event Listeners ---
+    // --- Modal and Event Listeners Setup ---
     (function setupListeners() {
+        const quantityPreview = document.getElementById('quantity-preview');
+        const paraSelector = document.getElementById('para-selector');
+
         document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() {
             document.querySelector('.tab.active')?.classList.remove('active');
             document.querySelector('.tab-content.active')?.classList.remove('active');
@@ -439,27 +429,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('date-picker').addEventListener('change', (e) => { const [y, m, d] = e.target.value.split('-'); currentDate = new Date(y, m - 1, d, 12); initApp(); });
         document.getElementById('prev-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() - 1); initApp(); });
         document.getElementById('next-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() + 1); initApp(); });
-        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v16', sectionSelector.value); initApp(); });
+        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v17', sectionSelector.value); initApp(); });
 
         attendanceTableBody.addEventListener('change', (e) => {
             if (e.target.classList.contains('attendance-check')) {
-                const index = e.target.dataset.index;
+                const index = parseInt(e.target.dataset.index, 10);
                 const field = e.target.dataset.field;
-                const dateStr = currentDate.toISOString().split('T')[0];
                 const section = sectionSelector.value;
+                const dateStr = currentDate.toISOString().split('T')[0];
                 const record = attendanceData.sections[section].attendance[dateStr][index];
+                
                 record[field] = e.target.checked;
                 if (field === 'present' && !e.target.checked) {
                     record.lesson = record.homework = record.milestone = false;
                 }
+                
                 if (e.target.checked && field !== 'present' && !record[`${field}Quantity`]) {
                     const studentName = attendanceData.sections[section].students[index];
                     const quantityField = `${field}Quantity`;
                     currentModalInfo = { index, field: quantityField };
                     document.getElementById('quantity-title').textContent = `${studentName} - ${field.replace('Quantity', '')}`;
-                    stepperValueEl.textContent = 1;
                     quantityPreview.value = '1';
-                    paraSelector.value = "";
                     openModal('quantity-assistant-modal');
                 } else {
                     saveData();
@@ -471,11 +461,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.addEventListener('click', (e) => {
             const target = e.target.closest('[data-action]');
             if (!target) return;
+            
             const action = target.dataset.action;
-            const index = target.dataset.index;
             const studentName = target.dataset.studentName;
             const section = sectionSelector.value;
-            const students = attendanceData.sections[section]?.students;
 
             switch (action) {
                 case 'share-whatsapp':
@@ -489,28 +478,35 @@ document.addEventListener('DOMContentLoaded', function() {
                     const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(reportText)}`;
                     window.open(whatsappUrl, '_blank');
                     break;
+
                 case 'edit-quantity':
+                    const index = parseInt(target.dataset.index, 10);
                     const field = target.dataset.field;
                     const dateStr = currentDate.toISOString().split('T')[0];
                     const record = attendanceData.sections[section].attendance[dateStr][index];
                     currentModalInfo = { index, field };
-                    document.getElementById('quantity-title').textContent = `${students[index]} - ${field.replace('Quantity', '')}`;
-                    const currentQuantity = record[field] || '';
-                    quantityPreview.value = currentQuantity;
-                    stepperValueEl.textContent = parseInt(currentQuantity) || 1;
-                    paraSelector.value = "";
+                    document.getElementById('quantity-title').textContent = `${attendanceData.sections[section].students[index]} - ${field.replace('Quantity', '')}`;
+                    quantityPreview.value = record[field] || '';
                     openModal('quantity-assistant-modal');
                     break;
+
                 case 'show-report':
                     showStudentMonthlyReportModal(studentName);
                     break;
+
                 case 'delete-student':
-                    if (confirm(`کیا آپ واقعی طالب علم "${students[index]}" کو حذف کرنا چاہتے ہیں؟`)) {
-                        students.splice(index, 1);
-                        delete attendanceData.studentDetails[students[index]];
-                        Object.values(attendanceData.sections[section].attendance).forEach(day => day.splice(index, 1));
-                        saveData();
-                        initApp();
+                    const studentNameToDelete = target.dataset.studentName;
+                    if (confirm(`کیا آپ واقعی طالب علم "${studentNameToDelete}" کو حذف کرنا چاہتے ہیں؟`)) {
+                        const studentIndex = attendanceData.sections[section].students.indexOf(studentNameToDelete);
+                        if (studentIndex > -1) {
+                            attendanceData.sections[section].students.splice(studentIndex, 1);
+                            delete attendanceData.studentDetails[studentNameToDelete];
+                            Object.values(attendanceData.sections[section].attendance).forEach(day => {
+                                if(day.length > studentIndex) day.splice(studentIndex, 1);
+                            });
+                            saveData();
+                            initApp();
+                        }
                     }
                     break;
             }
@@ -521,10 +517,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const phoneInput = document.getElementById('new-student-phone');
             const newStudentName = nameInput.value.trim();
             const section = sectionSelector.value;
-            
-            if (!attendanceData.sections[section]) {
-                attendanceData.sections[section] = { students: [], attendance: {} };
-            }
             const students = attendanceData.sections[section].students;
 
             if (newStudentName && !students.includes(newStudentName)) {
@@ -546,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Quantity Assistant Listeners
         document.getElementById('stepper-plus').addEventListener('click', () => {
             let val = (parseInt(quantityPreview.value.match(/^\d+/)) || 0) + 1;
-            quantityPreview.value = quantityPreview.value.replace(/^\d+/, val);
+            quantityPreview.value = quantityPreview.value.replace(/^\d+/, val) || val;
         });
 
         document.getElementById('stepper-minus').addEventListener('click', () => {
@@ -562,6 +554,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        paraSelector.innerHTML = '<option value="">پارہ منتخب کریں</option>';
+        for (let i = 1; i <= 30; i++) paraSelector.innerHTML += `<option value="${i}">پارہ نمبر ${i}</option>`;
         paraSelector.addEventListener('change', () => { 
             if (paraSelector.value) { 
                 quantityPreview.value = (quantityPreview.value + ` پارہ ${paraSelector.value}`).trim();
@@ -581,10 +575,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = quantityPreview.value.trim();
             
             attendanceData.sections[section].attendance[dateStr][index][field] = value;
-            if(value) {
-                const baseField = field.replace('Quantity', '');
-                attendanceData.sections[section].attendance[dateStr][index][baseField] = true;
-            }
+            const baseField = field.replace('Quantity', '');
+            attendanceData.sections[section].attendance[dateStr][index][baseField] = !!value;
 
             saveData();
             initApp();
