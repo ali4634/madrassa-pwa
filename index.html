@@ -4,21 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>مفصل حاضری و سبق رجسٹر</title>
-    
-    <!-- PWA Manifest and Icons -->
-    <meta name="theme-color" content="#3498db"/>
-    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D9%88%20%D8%B3%D8%A8%D9%82%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22short_name%22%3A%22%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f5f7fa%22%2C%22theme_color%22%3A%22%233498db%22%2C%22description%22%3A%22%D8%B7%D9%84%D8%A8%D8%A7%D8%A1%20%DA%A9%DB%8C%20%D8%AD%D8%A7%D8%B6%D8%B1%DB%8C%20%D8%A7%D9%88%D8%B1%20%D8%B3%D8%A8%D9%82%20%DA%A9%D8%A7%20%DA%88%DB%8C%D8%AC%DB%8C%D9%B9%D9%84%20%D8%B1%D8%AC%D8%B3%D9%B9%D8%B1%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAyJJREFUeJzt3cFNw2AUAFAx%2F%2F8%2F3gRKWzAlIKSr6rG%2BP4YgPjp4bNf%2FXwAAAPghCKwBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAID%2FA3y5A%2FC%2FSdSgAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAAD0fxzLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMhSURBVHhe7d3BEYAwEATAxP8v%2ByE9EAZmwT1bNbsmAAAA%2FG%2BqWpXVAAAA%2FiZAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIENi3Af4PAADAl2oW%2FwF4%2FM%2FlAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
-    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAyJJREFUeJzt3cFNw2AUAFAx//8/3gRKWzAlIKSr6rG+P4YgPjp4bNf/XwAAAPghCKwBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAIEBAgAAAIEDAIAAAACBgwAAAAAECgAAAgQIBAAAAIEBAgAAAID/A3y5A/C/SdSgAAAAAElFTkSuQmCC">
-    
-    <!-- Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF بنانے کے لیے ضروری لائبریریز -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    <!-- *** نئی لائبریری جو اردو PDF کے لیے ضروری ہے *** -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* CSS میں کوئی تبدیلی نہیں */
         :root {
             --primary-color: #3498db; --secondary-color: #2980b9; --success-color: #27ae60;
             --danger-color: #e74c3c; --warning-color: #f39c12; --light-color: #ecf0f1;
@@ -27,69 +18,74 @@
         }
         body {
             font-family: 'Nafees', 'Noto Nastaliq Urdu', sans-serif; margin: 0; padding: 10px;
-            background-color: #f5f7fa; direction: rtl; font-size: 15px; color: #333;
-            line-height: 1.6; overscroll-behavior-y: contain;
+            background-color: #f5f7fa; direction: rtl; font-size: 13px; color: #333;
+            line-height: 1.5; overscroll-behavior-y: contain;
         }
         .container { max-width: 100%; margin: 0 auto; background-color: white; padding: 15px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
         h1, h2, h3, h4, h5 { color: var(--dark-color); font-weight: 700; }
-        h1 { text-align: center; margin-bottom: 15px; font-size: 1.5em; padding-bottom: 10px; border-bottom: 2px solid var(--primary-color); }
+        h1 { text-align: center; margin-bottom: 12px; font-size: 1.4em; padding-bottom: 8px; border-bottom: 2px solid var(--primary-color); }
         .tabs { display: flex; margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; gap: 5px; overflow-x: auto; padding-bottom: 5px; }
-        .tab { padding: 8px 14px; cursor: pointer; background-color: #f1f1f1; border-radius: var(--border-radius) var(--border-radius) 0 0; font-size: 0.9em; border: 1px solid #e0e0e0; border-bottom: none; white-space: nowrap; }
+        .tab { padding: 6px 12px; cursor: pointer; background-color: #f1f1f1; border-radius: var(--border-radius) var(--border-radius) 0 0; font-size: 0.85em; border: 1px solid #e0e0e0; border-bottom: none; white-space: nowrap; }
         .tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         .tab-content { display: none; padding: 12px; border: 1px solid #e0e0e0; border-top: none; }
         .tab-content.active { display: block; }
-        .date-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 8px 12px; background-color: var(--primary-color); color: white; border-radius: var(--border-radius); font-size: 0.9em; }
-        .date-selector { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;}
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9em; }
-        th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid #e0e0e0; vertical-align: middle; }
+        .date-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 8px 12px; background-color: var(--primary-color); color: white; border-radius: var(--border-radius); font-size: 0.85em; }
+        .date-selector { display: flex; align-items: center; gap: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.8em; }
+        th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid #e0e0e0; vertical-align: middle; }
         th { background-color: var(--primary-color); color: white; font-weight: normal; position: sticky; top: 0; z-index: 1; }
         tr.present-row { background-color: var(--present-color); }
         tr.absent-row { background-color: var(--absent-color); }
-        .attendance-check { transform: scale(1.4); cursor: pointer; accent-color: var(--success-color); }
-        .small-btn { padding: 5px 8px; margin: 2px; font-size: 0.8em; border: none; border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        .attendance-check { transform: scale(1.3); cursor: pointer; accent-color: var(--success-color); }
+        .small-btn { padding: 5px 8px; margin: 2px; font-size: 0.75em; border: none; border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
         .add-btn { background-color: var(--success-color); color: white; }
         .delete-btn { background-color: var(--danger-color); color: white; }
-        .comment-icon { color: var(--warning-color); cursor: pointer; font-size: 1.2em; }
-        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
-        .modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; border-radius: var(--border-radius); animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .close { color: #aaa; float: left; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
-        .input-group { margin-bottom: 10px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
-        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 8px; border-radius: var(--border-radius); border: 1px solid #ddd; font-family: inherit; font-size: 1em; box-sizing: border-box; }
-        .share-buttons { display: flex; gap: 12px; margin-top: 15px; justify-content: center; }
-        .share-buttons .small-btn { padding: 12px 18px; font-size: 1.1em; }
-        .share-buttons .small-btn i { font-size: 1.3em; margin-left: 5px; }
-        .student-management { margin: 15px 0; padding: 12px; background-color: #f8f9fa; border-radius: var(--border-radius); border: 1px solid #ddd; }
-        .student-list { max-height: 250px; overflow-y: auto; margin: 10px 0; border: 1px solid #ddd; padding: 5px; }
-        .student-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 5px; border-bottom: 1px solid #eee; }
+        .view-btn { background-color: var(--primary-color); color: white; }
+        .whatsapp-btn { background-color: #25D366; color: white; }
+        .pdf-btn { background-color: #e74c3c; color: white; }
+        .comment-icon { color: var(--warning-color); cursor: pointer; font-size: 1.1em; }
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 10% auto; padding: 15px; border: 1px solid #888; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; border-radius: var(--border-radius); }
+        .close { color: #aaa; float: left; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .input-group { margin-bottom: 8px; }
+        .input-group label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.85em; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 6px; border-radius: var(--border-radius); border: 1px solid #ddd; font-family: inherit; font-size: 0.85em; box-sizing: border-box; }
+        .share-buttons { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+        .student-management { margin: 15px 0; padding: 10px; background-color: #f8f9fa; border-radius: var(--border-radius); border: 1px solid #ddd; }
+        .student-list { max-height: 200px; overflow-y: auto; margin: 10px 0; border: 1px solid #ddd; padding: 5px; }
+        .student-item { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid #eee; }
         .quantity-info { font-size: 0.8em; color: #666; display: block; cursor: pointer; padding: 2px; min-height: 1em; }
-        .phone-number { font-size: 0.85em; color: #555; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;}
-        .phone-number i { cursor: pointer; font-size: 1.1em; }
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .phone-number { font-size: 0.75em; color: #666; display: block; }
+        .edit-phone, .edit-name { cursor: pointer; margin: 0 4px; color: var(--primary-color); }
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .stat-card { background-color: white; padding: 12px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; }
-        .stat-card h3 { margin-top: 0; font-size: 0.9em; }
-        .stat-value { font-size: 1.4em; font-weight: bold; color: var(--primary-color); }
-        .student-name-small { font-size: 0.75em; color: #666; margin-top: 4px; max-height: 60px; overflow-y: auto; }
-        .student-name-clickable { color: var(--secondary-color); font-weight: bold; cursor: pointer; font-size: 1.2em; }
+        .stat-card h3 { margin-top: 0; font-size: 0.85em; }
+        .stat-value { font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
+        .student-name-small { font-size: 0.7em; color: #666; margin-top: 3px; max-height: 40px; overflow-y: auto; }
+        #refresh-indicator { position: fixed; top: -50px; left: 0; right: 0; text-align: center; background: var(--primary-color); color: white; padding: 10px; z-index: 1000; transition: top 0.3s; }
+        .student-name-clickable {
+            color: var(--secondary-color);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
         .student-name-clickable:hover { text-decoration: underline; }
-        #toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--dark-color); color: white; padding: 12px 20px; border-radius: var(--border-radius); z-index: 2000; visibility: hidden; opacity: 0; transition: opacity 0.5s, visibility 0.5s; }
-        #toast-notification.show { visibility: visible; opacity: 1; }
     </style>
 </head>
 <body>
-    <!-- HTML کا باقی حصہ -->
+    <script> const appConfig = { name: "hifaz_tracker", secret: "cc566846d81dae78bb4fcff49808315c" }; </script>
+    <div id="refresh-indicator">⟳ ریفریش کرنے کے لیے چھوڑ دیں</div>
     <div class="container">
+        <!-- بقیہ HTML ویسے ہی رہے گا -->
         <h1>📖 مفصل حاضری و سبق رجسٹر</h1>
-        <select class="section-selector" id="section-selector" style="font-size: 1.1em; padding: 8px; width:100%; margin-bottom: 10px; border-radius: var(--border-radius);">
+        <select class="section-selector" id="section-selector" style="font-size: 1em; padding: 8px; width:100%;">
             <option value="section1">سیکشن 1</option><option value="section2">سیکشن 2</option><option value="section3">سیکشن 3</option>
         </select>
         <div class="tabs">
             <div class="tab active" data-tab="attendance">حاضری</div><div class="tab" data-tab="stats">اعداد و شمار</div><div class="tab" data-tab="students">طلباء مینجمنٹ</div>
         </div>
         <div class="tab-content active" id="attendance-tab">
-            <div class="date-header"><div class="date-selector"><input type="date" id="date-picker"><h2 id="current-date"></h2><button class="small-btn add-btn" id="prev-day-btn">پچھلے دن</button><button class="small-btn add-btn" id="next-day-btn">اگلے دن</button></div></div>
+            <div class="date-header"><div class="date-selector"><input type="date" id="date-picker"><h2 id="current-date"></h2><button class="small-btn add-btn" id="next-day-btn">اگلے دن</button></div></div>
             <div style="overflow-x: auto;"><table id="attendance-table"><thead><tr><th>نام</th><th>حاضری</th><th>سبق</th><th>سبقی</th><th>منزل</th><th>تبصرہ</th></tr></thead><tbody></tbody></table></div>
         </div>
         <div class="tab-content" id="stats-tab">
@@ -106,74 +102,28 @@
         <div class="tab-content" id="students-tab">
             <h2>طلباء کی انتظامیہ</h2>
             <div class="student-management">
-                <h3>نئے طالب علم کا اضافہ</h3>
-                <div class="input-group"><input type="text" id="new-student-name" placeholder="طالب علم کا نام"></div>
-                <div class="input-group"><input type="tel" id="new-student-phone" placeholder="فون نمبر (اختیاری)"></div>
-                <button class="small-btn add-btn" id="add-student-btn" style="width: 100%; padding: 10px; font-size: 1em;">طالب علم شامل کریں</button>
-                <h3 style="margin-top: 20px;">موجودہ طلباء کی فہرست</h3>
+                <h3>طلباء کی فہرست</h3>
+                <div class="input-group"><input type="text" id="new-student-name" placeholder="نیا طالب علم کا نام"><input type="text" id="new-student-phone" placeholder="فون نمبر (اختیاری)"><button class="small-btn add-btn" id="add-student-btn">شامل</button></div>
                 <div class="student-list" id="student-list"></div>
             </div>
         </div>
     </div>
-    <div id="student-monthly-report-modal" class="modal"><div class="modal-content"><span class="close">×</span><h3 id="student-report-title"></h3><div id="student-report-content" style="max-height: 50vh; overflow-y: auto;"></div><div id="student-report-summary" style="margin-top: 15px; font-weight: bold;"></div><div class="share-buttons"><button id="modal-share-whatsapp" class="small-btn" style="background-color: #25D366; color: white;"><i class="fab fa-whatsapp"></i>واٹس ایپ</button><button id="modal-share-pdf" class="small-btn" style="background-color: #e74c3c; color: white;"><i class="fas fa-file-pdf"></i>PDF</button></div></div></div>
-    <div id="comment-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2 id="comment-title"></h2><textarea id="comment-text" rows="4" style="width:100%;"></textarea><button id="save-comment" class="small-btn add-btn" style="margin-top:10px; width: 100%; padding: 10px;">محفوظ کریں</button></div></div>
-    <div id="quantity-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2 id="quantity-title"></h2><input type="text" id="quantity-input"><button id="save-quantity" class="small-btn add-btn" style="margin-top:10px; width: 100%; padding: 10px;">محفوظ کریں</button></div></div>
-    <div id="phone-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2>فون نمبر میں ترمیم</h2><input type="tel" id="phone-input"><button id="save-phone" class="small-btn add-btn" style="margin-top:10px; width: 100%; padding: 10px;">محفوظ کریں</button></div></div>
-    <div id="name-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2>نام میں ترمیم</h2><input type="text" id="name-input"><button id="save-name" class="small-btn add-btn" style="margin-top:10px; width: 100%; padding: 10px;">محفوظ کریں</button></div></div>
-    <div id="toast-notification">ڈیٹا محفوظ ہوگیا</div>
+    <div id="student-monthly-report-modal" class="modal"><div class="modal-content"><span class="close">×</span><h3 id="student-report-title"></h3><div id="student-report-content" style="max-height: 50vh; overflow-y: auto;"></div><div id="student-report-summary" style="margin-top: 15px; font-weight: bold;"></div><div class="share-buttons"><button id="modal-share-whatsapp" class="small-btn whatsapp-btn"><i class="fab fa-whatsapp"></i></button><button id="modal-share-pdf" class="small-btn pdf-btn"><i class="fas fa-file-pdf"></i></button></div></div></div>
+    <div id="comment-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2 id="comment-title"></h2><textarea id="comment-text" rows="4" style="width:100%;"></textarea><button id="save-comment" class="small-btn add-btn" style="margin-top:10px">محفوظ</button></div></div>
+    <div id="quantity-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2 id="quantity-title"></h2><input type="text" id="quantity-input"><button id="save-quantity" class="small-btn add-btn" style="margin-top:10px">محفوظ</button></div></div>
+    <div id="phone-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2>فون نمبر</h2><input type="tel" id="phone-input"><button id="save-phone" class="small-btn add-btn" style="margin-top:10px">محفوظ</button></div></div>
+    <div id="name-modal" class="modal"><div class="modal-content"><span class="close">×</span><h2>نام</h2><input type="text" id="name-input"><button id="save-name" class="small-btn add-btn" style="margin-top:10px">محفوظ</button></div></div>
 
 <script>
-// PWA Service Worker Registration
-if ('serviceWorker' in navigator) {
-    const swCode = `
-        const CACHE_NAME = 'attendance-register-cache-v4'; // ورژن اپ ڈیٹ کریں
-        const urlsToCache = [
-            './',
-            'index.html',
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
-        ];
-        self.addEventListener('install', event => {
-            event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
-        });
-        self.addEventListener('fetch', event => {
-            event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
-        });
-    `;
-    const swBlob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(swBlob);
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register(swUrl)
-            .then(reg => console.log('Service worker registered!', reg))
-            .catch(err => console.log('Service worker registration failed:', err));
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // جاوا اسکرپٹ کا بقیہ حصہ
+    
+    // --- تمام جاوا اسکرپٹ کوڈ ---
     let currentDate = new Date();
     let attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
-    const DATA_KEY = 'attendanceData_v6_urdu_pdf';
+    const DATA_KEY = 'attendanceData_v2_full';
     let currentModalInfo = {};
 
-    function showToast(message) {
-        const toast = document.getElementById('toast-notification');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => { toast.classList.remove('show'); }, 2000);
-    }
-
-    function saveData() { 
-        try { 
-            localStorage.setItem(DATA_KEY, JSON.stringify(attendanceData)); 
-            showToast('ڈیٹا محفوظ ہوگیا');
-        } catch (e) { 
-            console.error('Data save error:', e); 
-            showToast('ڈیٹا محفوظ کرنے میں خرابی ہوئی');
-        } 
-    }
+    function saveData() { try { localStorage.setItem(DATA_KEY, JSON.stringify(attendanceData)); } catch (e) { console.error('Data save error:', e); } }
     
     function initApp() {
         const savedData = localStorage.getItem(DATA_KEY);
@@ -184,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch { console.error("Failed to parse data."); }
         }
         if (!attendanceData.studentDetails) attendanceData.studentDetails = {};
-        document.getElementById('section-selector').value = localStorage.getItem('lastSection_v6') || 'section1';
+        document.getElementById('section-selector').value = localStorage.getItem('lastSection_v2') || 'section1';
         updateDateDisplay();
         loadAttendanceData();
     }
@@ -202,12 +152,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const section = document.getElementById('section-selector').value;
         if (!attendanceData.sections[section]) attendanceData.sections[section] = { students: [], attendance: {} };
         if (!attendanceData.sections[section].attendance) attendanceData.sections[section].attendance = {};
-        
-        const students = attendanceData.sections[section].students;
-        if (!attendanceData.sections[section].attendance[dateStr] || attendanceData.sections[section].attendance[dateStr].length !== students.length) {
-            const defaultRecord = () => ({ present: false, lesson: false, homework: false, milestone: false, comment: '', lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' });
-            const existingRecords = attendanceData.sections[section].attendance[dateStr] || [];
-            attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existingRecords[i] || defaultRecord());
+        if (!attendanceData.sections[section].attendance[dateStr] || attendanceData.sections[section].attendance[dateStr].length !== attendanceData.sections[section].students.length) {
+            const studentCount = attendanceData.sections[section].students.length;
+            attendanceData.sections[section].attendance[dateStr] = Array(studentCount).fill(null).map(() => ({ present: false, lesson: false, homework: false, milestone: false, comment: '', lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' }));
         }
         renderAttendanceTable();
         renderStudentList();
@@ -218,46 +165,78 @@ document.addEventListener('DOMContentLoaded', function() {
         const dateStr = currentDate.toISOString().split('T')[0];
         const section = document.getElementById('section-selector').value;
         const tableBody = document.querySelector('#attendance-table tbody');
+        if(!tableBody) return;
         tableBody.innerHTML = '';
+        
         const students = attendanceData.sections[section]?.students || [];
         const attendanceRecords = attendanceData.sections[section]?.attendance[dateStr] || [];
+        
         students.forEach((student, index) => {
             const record = attendanceRecords[index] || {};
             const studentDetail = attendanceData.studentDetails[student] || {};
             const row = document.createElement('tr');
             row.className = record.present ? 'present-row' : 'absent-row';
-            const phone = studentDetail.phone || '';
             row.innerHTML = `
                 <td>
                     <span class="student-name-clickable" data-student-name="${student}">${student}</span>
                     <span class="phone-number">
-                        <i class="fas fa-edit" data-action="edit-name" data-index="${index}" title="نام بدلیں"></i>
-                        <i class="fas fa-phone" data-action="edit-phone" data-student-name="${student}" title="نمبر بدلیں"></i>
-                        ${phone ? `<i class="fab fa-whatsapp" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" style="color: #25D366;" title="رپورٹ بھیجیں"></i>` : ''}
-                        <span>${phone}</span>
+                        <i class="fas fa-edit edit-name" data-index="${index}"></i>
+                        <i class="fas fa-phone edit-phone" data-index="${index}"></i>
+                        ${studentDetail.phone || ''}
                     </span>
                 </td>
                 <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="present" ${record.present ? 'checked' : ''}></td>
-                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="lesson" ${record.lesson ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="lessonQuantity">${record.lessonQuantity || 'مقدار'}</span></td>
-                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="homework" ${record.homework ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="homeworkQuantity">${record.homeworkQuantity || 'مقدار'}</span></td>
-                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="milestone" ${record.milestone ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="milestoneQuantity">${record.milestoneQuantity || 'مقدار'}</span></td>
-                <td><span class="comment-icon" data-action="comment" data-index="${index}" title="تبصرہ لکھیں">💬</span></td>
+                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="lesson" ${record.lesson ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="lessonQuantity">${record.lessonQuantity || ' '}</span></td>
+                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="homework" ${record.homework ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="homeworkQuantity">${record.homeworkQuantity || ' '}</span></td>
+                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="milestone" ${record.milestone ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="milestoneQuantity">${record.milestoneQuantity || ' '}</span></td>
+                <td><span class="comment-icon" data-index="${index}">💬</span></td>
             `;
             tableBody.appendChild(row);
         });
     }
-    
+
+    function updateRow(index) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        const section = document.getElementById('section-selector').value;
+        const record = attendanceData.sections[section].attendance[dateStr][index];
+        const studentName = attendanceData.sections[section].students[index];
+        const studentDetail = attendanceData.studentDetails[studentName] || {};
+        const row = document.querySelector(`#attendance-table tbody tr:nth-child(${index + 1})`);
+        
+        if (!row) return;
+        
+        row.className = record.present ? 'present-row' : 'absent-row';
+        row.innerHTML = `
+            <td>
+                <span class="student-name-clickable" data-student-name="${studentName}">${studentName}</span>
+                <span class="phone-number">
+                    <i class="fas fa-edit edit-name" data-index="${index}"></i>
+                    <i class="fas fa-phone edit-phone" data-index="${index}"></i>
+                    ${studentDetail.phone || ''}
+                </span>
+            </td>
+            <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="present" ${record.present ? 'checked' : ''}></td>
+            <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="lesson" ${record.lesson ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="lessonQuantity">${record.lessonQuantity || ' '}</span></td>
+            <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="homework" ${record.homework ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="homeworkQuantity">${record.homeworkQuantity || ' '}</span></td>
+            <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="milestone" ${record.milestone ? 'checked' : ''} ${!record.present ? 'disabled' : ''}> <span class="quantity-info" data-index="${index}" data-field="milestoneQuantity">${record.milestoneQuantity || ' '}</span></td>
+            <td><span class="comment-icon" data-index="${index}">💬</span></td>
+        `;
+    }
+
     function handleCheckboxChange(event) {
         const index = parseInt(event.target.dataset.index);
         const field = event.target.dataset.field;
         const section = document.getElementById('section-selector').value;
         const dateStr = currentDate.toISOString().split('T')[0];
         const record = attendanceData.sections[section].attendance[dateStr][index];
+        
         record[field] = event.target.checked;
+        
         if (field === 'present' && !event.target.checked) {
             record.lesson = record.homework = record.milestone = false;
         }
-        renderAttendanceTable();
+        
+        updateRow(index);
         saveData();
         updateStats();
     }
@@ -265,12 +244,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderStudentList() {
         const section = document.getElementById('section-selector').value;
         const studentList = document.getElementById('student-list');
+        if(!studentList) return;
         studentList.innerHTML = '';
         const students = attendanceData.sections[section]?.students || [];
         students.forEach((student, index) => {
             const item = document.createElement('div');
             item.className = 'student-item';
-            item.innerHTML = `<span>${student}</span><button class="small-btn delete-btn" data-index="${index}">حذف کریں</button>`;
+            item.innerHTML = `<span>${student}</span><button class="small-btn delete-btn" data-index="${index}">حذف</button>`;
             studentList.appendChild(item);
         });
     }
@@ -280,22 +260,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const section = document.getElementById('section-selector').value;
         const students = attendanceData.sections[section]?.students || [];
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
+        let present = 0, lesson = 0, homework = 0, milestone = 0;
         let presentNames = [], absentNames = [], lessonNames = [], homeworkNames = [], milestoneNames = [];
+        
         students.forEach((student, index) => {
             const rec = records[index];
             if (rec?.present) {
-                presentNames.push(student);
+                present++; presentNames.push(student);
                 if (rec.lesson) lessonNames.push(student);
                 if (rec.homework) homeworkNames.push(student);
                 if (rec.milestone) milestoneNames.push(student);
             } else { absentNames.push(student); }
         });
+        lesson = lessonNames.length; homework = homeworkNames.length; milestone = milestoneNames.length;
+        
         document.getElementById('total-students').textContent = students.length;
-        document.getElementById('present-count').textContent = presentNames.length;
-        document.getElementById('absent-count').textContent = students.length - presentNames.length;
-        document.getElementById('lesson-count').textContent = lessonNames.length;
-        document.getElementById('homework-count').textContent = homeworkNames.length;
-        document.getElementById('milestone-count').textContent = milestoneNames.length;
+        document.getElementById('present-count').textContent = present;
+        document.getElementById('absent-count').textContent = students.length - present;
+        document.getElementById('lesson-count').textContent = lesson;
+        document.getElementById('homework-count').textContent = homework;
+        document.getElementById('milestone-count').textContent = milestone;
         document.getElementById('present-names').textContent = presentNames.join(', ');
         document.getElementById('absent-names').textContent = absentNames.join(', ');
         document.getElementById('lesson-names').textContent = lessonNames.join(', ');
@@ -308,107 +292,98 @@ document.addEventListener('DOMContentLoaded', function() {
         const studentIndex = attendanceData.sections[section]?.students.indexOf(studentName);
         if (studentIndex === -1) return report;
         const attendance = attendanceData.sections[section]?.attendance || {};
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dateObj = new Date(year, month, day);
-            const dateStr = dateObj.toISOString().split('T')[0];
-            if (attendance[dateStr] && attendance[dateStr][studentIndex]) {
+        for (const dateStr in attendance) {
+            const dateObj = new Date(dateStr);
+            if (dateObj.getMonth() === month && dateObj.getFullYear() === year) {
                 const record = attendance[dateStr][studentIndex];
-                report.records.push({ date: dateStr, ...record });
-                report.totalDays++;
-                if(record.present) report.presentDays++;
+                if (record) {
+                    report.records.push({ date: dateStr, ...record });
+                    report.totalDays++;
+                    if(record.present) report.presentDays++;
+                }
             }
         }
         report.records.sort((a,b) => new Date(a.date) - new Date(b.date));
         return report;
     }
 
-    function generateWhatsAppReportText(reportData, reportTitle) {
-        const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays/reportData.totalDays)*100) : 0;
-        let reportText = `*${reportTitle}*\n\n`;
-        reportText += `*خلاصہ:* ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)\n`;
-        reportText += `-----------------------------------\n`;
-        reportData.records.filter(r => r.present).forEach(rec => {
-            const date = new Date(rec.date).toLocaleDateString('ur-PK', {day: 'numeric', month: 'long'});
-            const lesson = rec.lesson ? (rec.lessonQuantity || '✔') : '✘';
-            const homework = rec.homework ? (rec.homeworkQuantity || '✔') : '✘';
-            const milestone = rec.milestone ? (rec.milestoneQuantity || '✔') : '✘';
-            reportText += `*تاریخ: ${date}*\n`;
-            reportText += `▫️ *سبق:* ${lesson}\n`;
-            reportText += `▫️ *سبقی:* ${homework}\n`;
-            reportText += `▫️ *منزل:* ${milestone}\n`;
-            reportText += `-----------------------------------\n`;
-        });
-        return reportText;
-    }
-
     function showStudentMonthlyReportModal(studentName) {
+        const modal = document.getElementById('student-monthly-report-modal');
         const month = currentDate.getMonth();
         const year = currentDate.getFullYear();
         const section = document.getElementById('section-selector').value;
         const reportTitle = `${studentName} کی رپورٹ (${new Date(year, month).toLocaleString('ur-PK', { month: 'long', year: 'numeric' })})`;
         document.getElementById('student-report-title').textContent = reportTitle;
         const reportData = generateMonthlyReportFor(studentName, month, year, section);
-        const reportContent = document.getElementById('student-report-content');
-        reportContent.innerHTML = ''; // Clear previous content
-        let tableHTML = `<table style="font-size:0.9em;width:100%;"><thead><tr><th>تاریخ</th><th>حاضری</th><th>سبق</th><th>سبقی</th><th>منزل</th></tr></thead><tbody>`;
-        reportData.records.forEach(rec => {
-            tableHTML += `<tr class="${rec.present ? 'present-row' : 'absent-row'}">
-                <td>${new Date(rec.date).toLocaleDateString('ur-PK', {day:'numeric', month:'short'})}</td>
-                <td>${rec.present ? 'حاضر' : 'غیرحاضر'}</td>
-                <td>${rec.present ? (rec.lesson ? (rec.lessonQuantity || '✔') : '✘') : '-'}</td>
-                <td>${rec.present ? (rec.homework ? (rec.homeworkQuantity || '✔') : '✘') : '-'}</td>
-                <td>${rec.present ? (rec.milestone ? (rec.milestoneQuantity || '✔') : '✘') : '-'}</td>
-            </tr>`;
+        let tableHTML = `<table style="font-size:0.9em;width:100%;"><thead><tr><th>تاریخ</th><th>سبق</th><th>سبقی</th><th>منزل</th></tr></thead><tbody>`;
+        reportData.records.filter(r => r.present).forEach(rec => {
+            tableHTML += `<tr><td>${new Date(rec.date).getDate()}</td><td>${rec.lesson ? (rec.lessonQuantity || '✔') : '✘'}</td><td>${rec.homework ? (rec.homeworkQuantity || '✔') : '✘'}</td><td>${rec.milestone ? (rec.milestoneQuantity || '✔') : '✘'}</td></tr>`;
         });
-        reportContent.innerHTML = tableHTML + '</tbody></table>';
+        document.getElementById('student-report-content').innerHTML = tableHTML + '</tbody></table>';
         const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays/reportData.totalDays)*100) : 0;
         document.getElementById('student-report-summary').textContent = `خلاصہ: ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)`;
+        
         document.getElementById('modal-share-whatsapp').onclick = () => {
-             const reportText = generateWhatsAppReportText(reportData, reportTitle);
-             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(reportText)}`);
+             let reportText = `*${reportTitle}*\n\n`;
+            reportText += `*خلاصہ:* ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)\n\n`;
+            reportText += 'تاریخ\t| سبق\t| سبقی\t| منزل\n';
+            reportText += '------------------------------------\n';
+
+            reportData.records.filter(r => r.present).forEach(rec => {
+                const date = new Date(rec.date).getDate();
+                const lesson = rec.lesson ? (rec.lessonQuantity || '✔') : '✘';
+                const homework = rec.homework ? (rec.homeworkQuantity || '✔') : '✘';
+                const milestone = rec.milestone ? (rec.milestoneQuantity || '✔') : '✘';
+                reportText += `${date}\t| ${lesson}\t| ${homework}\t| ${milestone}\n`;
+            });
+
+            const encodedText = encodeURIComponent(reportText);
+            window.open(`https://api.whatsapp.com/send?text=${encodedText}`);
         };
-        document.getElementById('modal-share-pdf').onclick = () => shareAsUrduPDF(studentName, reportData, reportTitle);
-        openModal('student-monthly-report-modal');
+
+        document.getElementById('modal-share-pdf').onclick = () => shareAsPDF(studentName, reportData, reportTitle);
+        
+        modal.style.display = 'block';
     }
 
-    // *** اردو PDF بنانے کے لیے نیا فنکشن ***
-    async function shareAsUrduPDF(studentName, reportData, title) {
-        showToast('PDF بنائی جا رہی ہے...');
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const reportElement = document.getElementById('student-report-content');
-        const reportTitle = document.getElementById('student-report-title');
-        const reportSummary = document.getElementById('student-report-summary');
+    // ===== html2app.dev کے لیے اپڈیٹ شدہ PDF فنکشن =====
+    async function shareAsPDF(studentName, reportData, title) {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-        // Capture the title
-        const canvasTitle = await html2canvas(reportTitle, { scale: 2, backgroundColor: null });
-        const imgDataTitle = canvasTitle.toDataURL('image/png');
-        pdf.addImage(imgDataTitle, 'PNG', 10, 10, 190, 0);
+            const engTitle = `${studentName}'s Report (${new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })})`;
+            const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays / reportData.totalDays) * 100) : 0;
 
-        // Capture the summary
-        const canvasSummary = await html2canvas(reportSummary, { scale: 2, backgroundColor: null });
-        const imgDataSummary = canvasSummary.toDataURL('image/png');
-        pdf.addImage(imgDataSummary, 'PNG', 10, 25, 190, 0);
-        
-        // Capture the main table content
-        const canvasContent = await html2canvas(reportElement, { scale: 2 });
-        const imgDataContent = canvasContent.toDataURL('image/png');
-        
-        const imgProps = pdf.getImageProperties(imgDataContent);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            doc.text(engTitle, 105, 15, { align: 'center' });
+            doc.text(`Summary: ${reportData.presentDays}/${reportData.totalDays} days present (${presentPercent}%)`, 105, 22, { align: 'center' });
+            
+            const head = [['Date', 'Sabaq', 'Sabqi', 'Manzil']];
+            const body = reportData.records.filter(r => r.present).map(r => [ 
+                new Date(r.date).toLocaleDateString('en-GB'), 
+                r.lesson ? (r.lessonQuantity || 'Yes') : 'No', 
+                r.homework ? (r.homeworkQuantity || 'Yes') : 'No', 
+                r.milestone ? (r.milestoneQuantity || 'Yes') : 'No' 
+            ]);
 
-        pdf.addImage(imgDataContent, 'PNG', 10, 40, pdfWidth - 20, pdfHeight);
-        pdf.save(`${studentName}_report.pdf`);
+            doc.autoTable({ head, body, startY: 30 });
+
+            // **اہم تبدیلی:** PDF کو ڈیٹا URI میں تبدیل کریں اور اسے نئے ٹیب میں کھولیں
+            const pdfDataUri = doc.output('datauristring');
+            window.open(pdfDataUri, '_blank');
+
+        } catch(e) { 
+            console.error("PDF creation error", e); 
+            alert("پی ڈی ایف بنانے میں خرابی ہوئی ہے۔\nError: " + e.message); 
+        }
     }
     
-    function openModal(modalId, info = {}) {
+    function openModal(modalId, info) {
         currentModalInfo = info;
         const modal = document.getElementById(modalId);
         if(!modal) return;
         if (modalId === 'quantity-modal') {
-            document.getElementById('quantity-title').textContent = `${info.studentName} - ${info.fieldName.replace('Quantity','')} مقدار`;
+            document.getElementById('quantity-title').textContent = `${info.studentName} کی ${info.fieldName.replace('Quantity','')} مقدار`;
             document.getElementById('quantity-input').value = info.currentValue || '';
         } else if (modalId === 'phone-modal') {
             document.getElementById('phone-input').value = info.currentValue;
@@ -418,68 +393,90 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('comment-title').textContent = `${info.studentName} کا تبصرہ`;
             document.getElementById('comment-text').value = info.currentValue;
         }
-        modal.classList.add('active');
-        const firstInput = modal.querySelector('input, textarea');
-        if (firstInput) {
-            setTimeout(() => firstInput.focus(), 50);
-        }
-    }
-    
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('active');
+        modal.style.display = 'block';
     }
 
-    // --- Event Listeners ---
+    // --- بقیہ ایونٹ لسنرز میں کوئی تبدیلی نہیں ---
+    let touchStartY = 0;
+    document.body.addEventListener('touchstart', e => { touchStartY = (window.scrollY === 0) ? e.touches[0].clientY : -1; }, { passive: true });
+    document.body.addEventListener('touchmove', e => { if (touchStartY > 0 && e.touches[0].clientY - touchStartY > 100) document.getElementById('refresh-indicator').style.top = '0'; }, { passive: true });
+    document.body.addEventListener('touchend', e => { if (touchStartY > 0 && e.changedTouches[0].clientY - touchStartY > 100) location.reload(); else document.getElementById('refresh-indicator').style.top = '-50px'; });
     document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() { document.querySelector('.tab.active')?.classList.remove('active'); document.querySelector('.tab-content.active')?.classList.remove('active'); this.classList.add('active'); document.getElementById(`${this.dataset.tab}-tab`)?.classList.add('active'); }));
-    document.getElementById('date-picker').addEventListener('change', function() { const [y,m,d] = this.value.split('-'); currentDate = new Date(y, m-1, d, 12); updateDateDisplay(); loadAttendanceData(); });
+    document.getElementById('date-picker').addEventListener('change', function() { const [y,m,d] = this.value.split('-'); currentDate = new Date(y, m-1, d); updateDateDisplay(); loadAttendanceData(); });
     document.getElementById('next-day-btn').addEventListener('click', function() { currentDate.setDate(currentDate.getDate() + 1); updateDateDisplay(); loadAttendanceData(); });
-    document.getElementById('prev-day-btn').addEventListener('click', function() { currentDate.setDate(currentDate.getDate() - 1); updateDateDisplay(); loadAttendanceData(); });
-    document.getElementById('section-selector').addEventListener('change', function() { localStorage.setItem('lastSection_v6', this.value); initApp(); });
-    document.querySelector('#attendance-table tbody').addEventListener('change', function(event) { if (event.target.classList.contains('attendance-check')) handleCheckboxChange(event); });
-    document.querySelector('#attendance-table tbody').addEventListener('click', function(event) {
-        const target = event.target.closest('[data-action], .student-name-clickable, .quantity-info');
-        if (!target) return;
-        const action = target.dataset.action;
-        const studentName = target.dataset.studentName;
-        if (action === 'share-whatsapp') {
-            event.stopPropagation();
-            const phone = target.dataset.phone;
-            const month = currentDate.getMonth();
-            const year = currentDate.getFullYear();
+    document.getElementById('section-selector').addEventListener('change', function() { localStorage.setItem('lastSection_v2', this.value); initApp(); });
+    
+    document.querySelector('#attendance-table tbody').addEventListener('change', function(event) {
+        if (event.target.classList.contains('attendance-check')) {
+            const index = parseInt(event.target.dataset.index);
+            const field = event.target.dataset.field;
             const section = document.getElementById('section-selector').value;
-            const reportTitle = `${studentName} کی رپورٹ (${new Date(year, month).toLocaleString('ur-PK', { month: 'long', year: 'numeric' })})`;
-            const reportData = generateMonthlyReportFor(studentName, month, year, section);
-            const reportText = generateWhatsAppReportText(reportData, reportTitle);
-            window.open(`https://api.whatsapp.com/send?phone=${phone.replace(/\s/g, '')}&text=${encodeURIComponent(reportText)}`);
-            return;
-        }
-        if (target.classList.contains('student-name-clickable')) {
-            showStudentMonthlyReportModal(studentName);
-            return;
-        }
-        const index = parseInt(target.dataset.index);
-        const section = document.getElementById('section-selector').value;
-        const currentStudentName = attendanceData.sections[section].students[index];
-        const dateStr = currentDate.toISOString().split('T')[0];
-        const record = attendanceData.sections[section].attendance[dateStr][index];
-        if (target.classList.contains('quantity-info')) {
-            const field = target.dataset.field;
-            openModal('quantity-modal', { index, field, currentValue: record[field] || '', studentName: currentStudentName, fieldName: field });
-        } else if (action === 'comment') {
-            openModal('comment-modal', { index, currentValue: record.comment || '', studentName: currentStudentName });
-        } else if (action === 'edit-phone') {
-            openModal('phone-modal', { studentName, currentValue: attendanceData.studentDetails[studentName]?.phone || '' });
-        } else if (action === 'edit-name') {
-            openModal('name-modal', { index, studentName: currentStudentName, currentValue: currentStudentName });
+            const studentName = attendanceData.sections[section].students[index];
+            
+            if (event.target.checked && (field === 'lesson' || field === 'homework' || field === 'milestone')) {
+                const quantityField = `${field}Quantity`;
+                 openModal('quantity-modal', {
+                    index: index,
+                    field: quantityField,
+                    currentValue: attendanceData.sections[section].attendance[currentDate.toISOString().split('T')[0]][index][quantityField],
+                    studentName: studentName,
+                    fieldName: quantityField
+                });
+            }
+            
+            handleCheckboxChange(event);
         }
     });
-    document.getElementById('save-quantity').addEventListener('click', function() { const { index, field } = currentModalInfo; const section = document.getElementById('section-selector').value; const dateStr = currentDate.toISOString().split('T')[0]; const value = document.getElementById('quantity-input').value; attendanceData.sections[section].attendance[dateStr][index][field] = value; if (value.trim() !== '') { if (field === 'lessonQuantity') attendanceData.sections[section].attendance[dateStr][index].lesson = true; else if (field === 'homeworkQuantity') attendanceData.sections[section].attendance[dateStr][index].homework = true; else if (field === 'milestoneQuantity') attendanceData.sections[section].attendance[dateStr][index].milestone = true; } saveData(); renderAttendanceTable(); updateStats(); closeModal('quantity-modal'); });
-    document.getElementById('save-comment').addEventListener('click', function() { const { index } = currentModalInfo; const section = document.getElementById('section-selector').value; const dateStr = currentDate.toISOString().split('T')[0]; attendanceData.sections[section].attendance[dateStr][index].comment = document.getElementById('comment-text').value; saveData(); closeModal('comment-modal'); });
-    document.getElementById('save-phone').addEventListener('click', function() { const { studentName } = currentModalInfo; if (!attendanceData.studentDetails[studentName]) attendanceData.studentDetails[studentName] = {}; attendanceData.studentDetails[studentName].phone = document.getElementById('phone-input').value; saveData(); renderAttendanceTable(); closeModal('phone-modal'); });
-    document.getElementById('save-name').addEventListener('click', function() { const { studentName, index } = currentModalInfo; const newName = document.getElementById('name-input').value.trim(); const section = document.getElementById('section-selector').value; if (newName && newName !== studentName) { attendanceData.sections[section].students[index] = newName; if(attendanceData.studentDetails[studentName]) { attendanceData.studentDetails[newName] = attendanceData.studentDetails[studentName]; delete attendanceData.studentDetails[studentName]; } saveData(); loadAttendanceData(); closeModal('name-modal'); } });
-    document.querySelectorAll('.modal').forEach(modal => { modal.addEventListener('click', function(event) { if (event.target === modal) closeModal(modal.id); }); modal.querySelector('.close').addEventListener('click', function() { closeModal(modal.id); }); });
+
+    document.querySelector('#attendance-table tbody').addEventListener('click', function(event) {
+        const target = event.target;
+        if (target.dataset.index) {
+            const index = parseInt(target.dataset.index);
+            const section = document.getElementById('section-selector').value;
+            const studentName = attendanceData.sections[section].students[index];
+            const dateStr = currentDate.toISOString().split('T')[0];
+            const record = attendanceData.sections[section].attendance[dateStr][index];
+            if (target.classList.contains('quantity-info')) {
+                const field = target.dataset.field;
+                openModal('quantity-modal', { index, field, currentValue: record[field] || '', studentName, fieldName: field });
+            } else if (target.classList.contains('comment-icon')) {
+                openModal('comment-modal', { index, currentValue: record.comment || '', studentName });
+            } else if (target.classList.contains('edit-phone')) {
+                openModal('phone-modal', { studentName, currentValue: attendanceData.studentDetails[studentName]?.phone || '' });
+            } else if (target.classList.contains('edit-name')) {
+                openModal('name-modal', { index, studentName, currentValue: studentName });
+            }
+        } else if (target.dataset.studentName) {
+            if (target.classList.contains('student-name-clickable')) {
+                showStudentMonthlyReportModal(target.dataset.studentName);
+            }
+        }
+    });
+
+    document.getElementById('save-quantity').addEventListener('click', function() { 
+        const { index, field } = currentModalInfo; 
+        const section = document.getElementById('section-selector').value; 
+        const dateStr = currentDate.toISOString().split('T')[0]; 
+        const value = document.getElementById('quantity-input').value;
+        
+        attendanceData.sections[section].attendance[dateStr][index][field] = value;
+        
+        if (value.trim() !== '') {
+            if (field === 'lessonQuantity') attendanceData.sections[section].attendance[dateStr][index].lesson = true;
+            else if (field === 'homeworkQuantity') attendanceData.sections[section].attendance[dateStr][index].homework = true;
+            else if (field === 'milestoneQuantity') attendanceData.sections[section].attendance[dateStr][index].milestone = true;
+        }
+        
+        saveData();
+        updateRow(index);
+        document.getElementById('quantity-modal').style.display = 'none'; 
+    });
+
+    document.getElementById('save-comment').addEventListener('click', function() { const { index } = currentModalInfo; const section = document.getElementById('section-selector').value; const dateStr = currentDate.toISOString().split('T')[0]; attendanceData.sections[section].attendance[dateStr][index].comment = document.getElementById('comment-text').value; saveData(); document.getElementById('comment-modal').style.display = 'none'; });
+    document.getElementById('save-phone').addEventListener('click', function() { const { studentName } = currentModalInfo; if (!attendanceData.studentDetails[studentName]) attendanceData.studentDetails[studentName] = {}; attendanceData.studentDetails[studentName].phone = document.getElementById('phone-input').value; saveData(); renderAttendanceTable(); document.getElementById('phone-modal').style.display = 'none'; });
+    document.getElementById('save-name').addEventListener('click', function() { const { studentName, index } = currentModalInfo; const newName = document.getElementById('name-input').value.trim(); const section = document.getElementById('section-selector').value; if (newName && newName !== studentName) { attendanceData.sections[section].students[index] = newName; if(attendanceData.studentDetails[studentName]) { attendanceData.studentDetails[newName] = attendanceData.studentDetails[studentName]; delete attendanceData.studentDetails[studentName]; } saveData(); loadAttendanceData(); document.getElementById('name-modal').style.display = 'none'; } });
+    document.querySelectorAll('.modal .close').forEach(btn => btn.addEventListener('click', function() { this.closest('.modal').style.display = 'none'; }));
     document.getElementById('add-student-btn').addEventListener('click', function() { const nameInput = document.getElementById('new-student-name'); const phoneInput = document.getElementById('new-student-phone'); const studentName = nameInput.value.trim(); const section = document.getElementById('section-selector').value; if (studentName && !attendanceData.sections[section]?.students.includes(studentName)) { attendanceData.sections[section].students.push(studentName); if(phoneInput.value.trim()) { if(!attendanceData.studentDetails[studentName]) attendanceData.studentDetails[studentName] = {}; attendanceData.studentDetails[studentName].phone = phoneInput.value.trim(); } saveData(); loadAttendanceData(); nameInput.value = ''; phoneInput.value = ''; } else { alert("نام خالی ہے یا پہلے سے موجود ہے۔"); } });
-    document.getElementById('student-list').addEventListener('click', function(event) { if (event.target.classList.contains('delete-btn')) { const index = parseInt(event.target.dataset.index); const section = document.getElementById('section-selector').value; const studentName = attendanceData.sections[section].students[index]; if (confirm(`کیا آپ واقعی طالب علم "${studentName}" کو حذف کرنا چاہتے ہیں؟`)) { attendanceData.sections[section].students.splice(index, 1); delete attendanceData.studentDetails[studentName]; Object.keys(attendanceData.sections[section].attendance).forEach(dateStr => { attendanceData.sections[section].attendance[dateStr].splice(index, 1); }); saveData(); loadAttendanceData(); } } });
     
     initApp();
 });
