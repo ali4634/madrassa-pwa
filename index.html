@@ -72,6 +72,7 @@
         .para-selector-container { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
         .para-selector-container select { flex-grow: 1; padding: 8px; font-size: 1em; border-radius: var(--border-radius); }
         .save-btn-full { width: 100%; padding: 12px; font-size: 1.1em; margin-top: 15px; background-color: var(--success-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer;}
+        .management-section { margin: 15px 0; padding: 12px; background-color: #f8f9fa; border-radius: var(--border-radius); border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -104,13 +105,24 @@
         </div>
         <div class="tab-content" id="students-tab">
             <h2>طلباء کی انتظامیہ</h2>
-            <div style="margin: 15px 0; padding: 12px; background-color: #f8f9fa; border-radius: var(--border-radius); border: 1px solid #ddd;">
+            <div class="management-section">
                 <h3>نئے طالب علم کا اضافہ</h3>
                 <div class="input-group"><input type="text" id="new-student-name" placeholder="طالب علم کا نام"></div>
                 <div class="input-group"><input type="tel" id="new-student-phone" placeholder="فون نمبر (اختیاری)"></div>
                 <button id="add-student-btn" class="save-btn-full">طالب علم شامل کریں</button>
+            </div>
+             <div class="management-section">
                 <h3 style="margin-top: 20px;">موجودہ طلباء کی فہرست</h3>
                 <div id="student-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;"></div>
+            </div>
+            <div class="management-section">
+                <h3>بیک اپ اور بحالی</h3>
+                <p style="font-size:0.9em; color:#555;">اپنے تمام ڈیٹا کا بیک اپ ڈاؤن لوڈ کریں یا پہلے سے محفوظ شدہ بیک اپ کو بحال کریں۔</p>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button id="backup-btn" class="save-btn-full" style="background-color:var(--primary-color);">ڈیٹا کا بیک اپ لیں</button>
+                    <button id="restore-btn" class="save-btn-full" style="background-color:var(--warning-color);">ڈیٹا بحال کریں</button>
+                    <input type="file" id="restore-file-input" accept=".json" style="display:none;">
+                </div>
             </div>
         </div>
     </div>
@@ -134,7 +146,7 @@
 <script>
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
-    const swCode = `const CACHE_NAME = 'attendance-register-cache-v15'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'])))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
+    const swCode = `const CACHE_NAME = 'attendance-register-cache-v16'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'])))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
     const swBlob = new Blob([swCode], { type: 'application/javascript' });
     window.addEventListener('load', () => navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.error('SW reg failed: ', err)));
 }
@@ -142,20 +154,21 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();
     let attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
-    const DATA_KEY = 'attendanceData_v15_tested';
+    const DATA_KEY = 'attendanceData_v16_tested';
     let currentModalInfo = {};
 
     // --- DOM Elements ---
     const sectionSelector = document.getElementById('section-selector');
     const attendanceTableBody = document.querySelector('#attendance-table tbody');
     const studentListContainer = document.getElementById('student-list');
+    const restoreFileInput = document.getElementById('restore-file-input');
     
     // --- Toast Notification ---
     const showToast = (message) => {
         const toast = document.getElementById('toast-notification');
         toast.textContent = message;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
+        setTimeout(() => toast.classList.remove('show'), 3000);
     };
 
     // --- Data Persistence ---
@@ -170,11 +183,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedData) {
             try {
                 const parsedData = JSON.parse(savedData);
-                if (parsedData && parsedData.sections) attendanceData = parsedData;
-            } catch { console.error("Failed to parse data."); }
+                // Basic validation
+                if (parsedData && parsedData.sections) {
+                    attendanceData = parsedData;
+                } else {
+                    console.error("Loaded data is not in the correct format.");
+                    throw new Error("Invalid data format");
+                }
+            } catch { 
+                console.error("Failed to parse data from localStorage.");
+                // Reset to default if data is corrupted
+                attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
+            }
         }
         if (!attendanceData.studentDetails) attendanceData.studentDetails = {};
-        sectionSelector.value = localStorage.getItem('lastSection_v15') || 'section1';
+        sectionSelector.value = localStorage.getItem('lastSection_v16') || 'section1';
     };
 
     // --- UI Rendering ---
@@ -235,14 +258,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const students = attendanceData.sections[section]?.students || [];
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
 
-        let presentCount = 0;
-        let lessonCount = 0;
-        let homeworkCount = 0;
-        let milestoneCount = 0;
-
+        let presentCount = 0, lessonCount = 0, homeworkCount = 0, milestoneCount = 0;
         if (records) {
             records.forEach(record => {
-                if (record.present) {
+                if (record && record.present) {
                     presentCount++;
                     if (record.lesson) lessonCount++;
                     if (record.homework) homeworkCount++;
@@ -252,7 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const absentCount = students.length - presentCount;
-
         const statsContainer = document.getElementById('stats-container');
         statsContainer.innerHTML = `
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; text-align: center;">
@@ -261,64 +279,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div style="background-color: #e3f2fd; padding: 15px; border-radius: 8px;"><h4>سبق سنانے والے</h4><p style="font-size: 1.5em; font-weight: bold;">${lessonCount}</p></div>
                 <div style="background-color: #fff9c4; padding: 15px; border-radius: 8px;"><h4>سبقی سنانے والے</h4><p style="font-size: 1.5em; font-weight: bold;">${homeworkCount}</p></div>
                  <div style="background-color: #fce4ec; padding: 15px; border-radius: 8px;"><h4>منزل سنانے والے</h4><p style="font-size: 1.5em; font-weight: bold;">${milestoneCount}</p></div>
-            </div>
-        `;
+            </div>`;
     };
     
     // --- WhatsApp and Report Generation ---
     const formatPhoneNumberForWhatsApp = (phone) => {
         let cleaned = phone.replace(/\D/g, '');
-        if (cleaned.startsWith('03')) {
-            cleaned = '92' + cleaned.substring(1);
-        }
+        if (cleaned.startsWith('03')) cleaned = '92' + cleaned.substring(1);
         return cleaned;
     };
     
-    // **تبدیلی**: ماہانہ رپورٹ کا متن بنانے والا فنکشن
     const generateMonthlyReportText = (studentName, dateForMonth) => {
-        const month = dateForMonth.getMonth();
-        const year = dateForMonth.getFullYear();
+        const month = dateForMonth.getMonth(), year = dateForMonth.getFullYear();
         const section = sectionSelector.value;
         const reportTitle = `*${studentName} کی ماہانہ کارکردگی رپورٹ* (${new Date(year, month).toLocaleString('ur-PK', { month: 'long', year: 'numeric' })})`;
-
         const reportData = generateMonthlyReportFor(studentName, month, year, section);
         const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays / reportData.totalDays) * 100) : 0;
         const summaryText = `*خلاصہ:*\nکل ایام: ${reportData.totalDays}\nحاضری: ${reportData.presentDays} دن (${presentPercent}%)\nغیر حاضری: ${reportData.totalDays - reportData.presentDays} دن`;
-
-        let monthlyReportText = `${reportTitle}\n\n${summaryText}\n\n`;
-        monthlyReportText += "*روزانہ کی تفصیل:*\n";
-
+        let monthlyReportText = `${reportTitle}\n\n${summaryText}\n\n*روزانہ کی تفصیل:*\n`;
         reportData.records.forEach(rec => {
             const dateString = new Date(rec.date).toLocaleDateString('ur-PK', { day: '2-digit', month: 'short' });
             let dailyRecord = `*${dateString}:* `;
-
             if (rec.present) {
                 dailyRecord += "حاضر ✅\n";
                 let details = [];
-                if (rec.lesson) {
-                    details.push(`   • *سبق:* ${rec.lessonQuantity || 'سنایا'}`);
-                }
-                if (rec.homework) {
-                    details.push(`   • *سبقی:* ${rec.homeworkQuantity || 'سنائی'}`);
-                }
-                if (rec.milestone) {
-                    details.push(`   • *منزل:* ${rec.milestoneQuantity || 'سنائی'}`);
-                }
-                if (details.length > 0) {
-                    dailyRecord += details.join('\n');
-                } else {
-                     dailyRecord += "   • کوئی سبق نہیں سنایا گیا۔";
-                }
+                if (rec.lesson) details.push(`   • *سبق:* ${rec.lessonQuantity || 'سنایا'}`);
+                if (rec.homework) details.push(`   • *سبقی:* ${rec.homeworkQuantity || 'سنائی'}`);
+                if (rec.milestone) details.push(`   • *منزل:* ${rec.milestoneQuantity || 'سنائی'}`);
+                if (details.length > 0) dailyRecord += details.join('\n');
+                else dailyRecord += "   • کوئی سبق نہیں سنایا گیا۔";
             } else {
                 dailyRecord += "غیر حاضر ❌";
             }
             monthlyReportText += dailyRecord + "\n\n";
         });
-
         monthlyReportText += `\n- بذریعہ حفظ ٹریکر ایپ`;
         return monthlyReportText;
     };
-
 
     const generateMonthlyReportFor = (studentName, month, year, section) => {
         const report = { records: [], totalDays: 0, presentDays: 0 };
@@ -341,14 +338,11 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     const showStudentMonthlyReportModal = (studentName) => {
-        const month = currentDate.getMonth();
-        const year = currentDate.getFullYear();
-        const section = sectionSelector.value;
+        const month = currentDate.getMonth(), year = currentDate.getFullYear(), section = sectionSelector.value;
         const reportTitle = `${studentName} کی رپورٹ (${new Date(year, month).toLocaleString('ur-PK', { month: 'long', year: 'numeric' })})`;
         document.getElementById('student-report-title').textContent = reportTitle;
         const reportData = generateMonthlyReportFor(studentName, month, year, section);
         const reportContent = document.getElementById('student-report-content');
-        reportContent.innerHTML = '';
         let tableHTML = `<table style="font-size:0.9em;width:100%;"><thead><tr><th>تاریخ</th><th>حاضری</th><th>سبق</th><th>سبقی</th><th>منزل</th></tr></thead><tbody>`;
         reportData.records.forEach(rec => {
             tableHTML += `<tr class="${rec.present ? 'present-row' : 'absent-row'}">
@@ -356,27 +350,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${rec.present ? 'حاضر' : 'غیرحاضر'}</td>
                 <td>${rec.present ? (rec.lesson ? (rec.lessonQuantity || '✔') : '✘') : '-'}</td>
                 <td>${rec.present ? (rec.homework ? (rec.homeworkQuantity || '✔') : '✘') : '-'}</td>
-                <td>${rec.present ? (rec.milestone ? (rec.milestoneQuantity || '✔') : '✘') : '-'}</td>
-            </tr>`;
+                <td>${rec.present ? (rec.milestone ? (rec.milestoneQuantity || '✔') : '✘') : '-'}</td></tr>`;
         });
         reportContent.innerHTML = tableHTML + '</tbody></table>';
         const presentPercent = reportData.totalDays > 0 ? Math.round((reportData.presentDays/reportData.totalDays)*100) : 0;
-        const summaryText = `خلاصہ: ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)`;
-        document.getElementById('student-report-summary').textContent = summaryText;
-        
+        document.getElementById('student-report-summary').textContent = `خلاصہ: ${reportData.presentDays}/${reportData.totalDays} دن حاضری (${presentPercent}%)`;
         document.getElementById('modal-share-whatsapp').onclick = () => {
-            const studentDetail = attendanceData.studentDetails[studentName] || {};
-            const phone = studentDetail.phone;
-            if (!phone) {
-                showToast('اس طالب علم کا فون نمبر موجود نہیں');
-                return;
-            }
+            const phone = (attendanceData.studentDetails[studentName] || {}).phone;
+            if (!phone) return showToast('اس طالب علم کا فون نمبر موجود نہیں');
             const reportText = generateMonthlyReportText(studentName, currentDate);
-            const formattedPhone = formatPhoneNumberForWhatsApp(phone);
-            const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(reportText)}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/${formatPhoneNumberForWhatsApp(phone)}?text=${encodeURIComponent(reportText)}`, '_blank');
         };
-
         document.getElementById('modal-share-pdf').onclick = () => shareAsUrduPDF(studentName);
         openModal('student-monthly-report-modal');
     };
@@ -385,9 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showToast('PDF بنائی جا رہی ہے...');
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const reportTitleEl = document.getElementById('student-report-title');
-        const reportSummaryEl = document.getElementById('student-report-summary');
-        const reportContentEl = document.getElementById('student-report-content');
+        const reportTitleEl = document.getElementById('student-report-title'), reportSummaryEl = document.getElementById('student-report-summary'), reportContentEl = document.getElementById('student-report-content');
         try {
             const canvasOptions = { scale: 2, backgroundColor: null, useCORS: true };
             const canvasTitle = await html2canvas(reportTitleEl, canvasOptions);
@@ -396,25 +378,20 @@ document.addEventListener('DOMContentLoaded', function() {
             pdf.addImage(canvasSummary.toDataURL('image/png'), 'PNG', 10, 25, 190, 0);
             const canvasContent = await html2canvas(reportContentEl, canvasOptions);
             const imgProps = pdf.getImageProperties(canvasContent);
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            const pdfWidth = pdf.internal.pageSize.getWidth(), pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
             pdf.addImage(canvasContent.toDataURL('image/png'), 'PNG', 10, 40, pdfWidth - 20, pdfHeight);
             pdf.save(`${studentName}_report.pdf`);
-        } catch (error) {
-            console.error("PDF generation failed:", error);
-            showToast("PDF بنانے میں خرابی ہوئی");
-        }
+        } catch (error) { console.error("PDF generation failed:", error); showToast("PDF بنانے میں خرابی ہوئی"); }
     };
     
     const initApp = () => {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        const section = sectionSelector.value;
+        const dateStr = currentDate.toISOString().split('T')[0], section = sectionSelector.value;
         if (!attendanceData.sections[section]) attendanceData.sections[section] = { students: [], attendance: {} };
         const students = attendanceData.sections[section].students;
         if (!attendanceData.sections[section].attendance[dateStr] || attendanceData.sections[section].attendance[dateStr].length !== students.length) {
-            const defaultRecord = () => ({ present: false, lesson: false, homework: false, milestone: false, lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' });
-            const existingRecords = attendanceData.sections[section].attendance[dateStr] || [];
-            attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existingRecords[i] || defaultRecord());
+            const defaultRec = () => ({ present: false, lesson: false, homework: false, milestone: false, lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' });
+            const existing = attendanceData.sections[section].attendance[dateStr] || [];
+            attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existing[i] || defaultRec());
         }
         updateDateDisplay();
         renderAttendanceTable();
@@ -423,13 +400,10 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // --- Quantity Assistant Setup ---
-    const quantityPreview = document.getElementById('quantity-preview');
-    const stepperValueEl = document.getElementById('stepper-value');
-    const paraSelector = document.getElementById('para-selector');
+    const quantityPreview = document.getElementById('quantity-preview'), stepperValueEl = document.getElementById('stepper-value'), paraSelector = document.getElementById('para-selector');
     paraSelector.innerHTML = '<option value="">پارہ منتخب کریں</option>';
     for (let i = 1; i <= 30; i++) paraSelector.innerHTML += `<option value="${i}">پارہ نمبر ${i}</option>`;
-    const quickButtons = ['لائن', 'صفحہ', 'رکوع', 'آیت', 'ربع', 'آدھا', 'پون', 'سوا', 'مکمل', 'یاد'];
-    document.getElementById('quick-btns-container').innerHTML = quickButtons.map(text => `<button class="quick-btn">${text}</button>`).join('');
+    document.getElementById('quick-btns-container').innerHTML = ['لائن', 'صفحہ', 'رکوع', 'آیت', 'ربع', 'آدھا', 'پون', 'سوا', 'مکمل', 'یاد'].map(text => `<button class="quick-btn">${text}</button>`).join('');
     
     // --- Modal Handling ---
     const openModal = (modalId) => document.getElementById(modalId).classList.add('active');
@@ -447,165 +421,122 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('date-picker').addEventListener('change', (e) => { const [y, m, d] = e.target.value.split('-'); currentDate = new Date(y, m - 1, d, 12); initApp(); });
         document.getElementById('prev-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() - 1); initApp(); });
         document.getElementById('next-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() + 1); initApp(); });
-        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v15', sectionSelector.value); initApp(); });
+        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v16', sectionSelector.value); initApp(); });
 
         attendanceTableBody.addEventListener('change', (e) => {
             if (e.target.classList.contains('attendance-check')) {
-                const index = e.target.dataset.index;
-                const field = e.target.dataset.field;
-                const dateStr = currentDate.toISOString().split('T')[0];
-                const section = sectionSelector.value;
+                const index = e.target.dataset.index, field = e.target.dataset.field, dateStr = currentDate.toISOString().split('T')[0], section = sectionSelector.value;
                 const record = attendanceData.sections[section].attendance[dateStr][index];
                 record[field] = e.target.checked;
-                if (field === 'present' && !e.target.checked) {
-                    record.lesson = record.homework = record.milestone = false;
-                }
+                if (field === 'present' && !e.target.checked) record.lesson = record.homework = record.milestone = false;
                 if (e.target.checked && field !== 'present') {
-                    const studentName = attendanceData.sections[section].students[index];
-                    const quantityField = `${field}Quantity`;
+                    const studentName = attendanceData.sections[section].students[index], quantityField = `${field}Quantity`;
                     currentModalInfo = { index, field: quantityField };
                     document.getElementById('quantity-title').textContent = `${studentName} - ${field.replace('Quantity', '')}`;
-                    stepperValueEl.textContent = 1;
-                    quantityPreview.value = '1';
-                    paraSelector.value = "";
+                    stepperValueEl.textContent = 1; quantityPreview.value = '1'; paraSelector.value = "";
                     openModal('quantity-assistant-modal');
-                } else {
-                    saveData();
-                    initApp();
-                }
+                } else { saveData(); initApp(); }
             }
         });
 
         document.body.addEventListener('click', (e) => {
-            const target = e.target.closest('[data-action]');
-            if (!target) return;
-            const action = target.dataset.action;
-            const index = target.dataset.index;
-            const studentName = target.dataset.studentName;
-            const section = sectionSelector.value;
-            const students = attendanceData.sections[section]?.students;
-
+            const target = e.target.closest('[data-action]'); if (!target) return;
+            const action = target.dataset.action, index = target.dataset.index, studentName = target.dataset.studentName;
+            const section = sectionSelector.value, students = attendanceData.sections[section]?.students;
             switch (action) {
                 case 'share-whatsapp':
-                    const phone = target.dataset.phone;
-                    if (!phone) {
-                        showToast('اس طالب علم کا فون نمبر موجود نہیں');
-                        return;
-                    }
-                    const reportText = generateMonthlyReportText(studentName, currentDate);
-                    const formattedPhone = formatPhoneNumberForWhatsApp(phone);
-                    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(reportText)}`;
-                    window.open(whatsappUrl, '_blank');
+                    const phone = target.dataset.phone; if (!phone) return showToast('اس طالب علم کا فون نمبر موجود نہیں');
+                    window.open(`https://wa.me/${formatPhoneNumberForWhatsApp(phone)}?text=${encodeURIComponent(generateMonthlyReportText(studentName, currentDate))}`, '_blank');
                     break;
                 case 'edit-quantity':
-                    const field = target.dataset.field;
-                    const dateStr = currentDate.toISOString().split('T')[0];
+                    const field = target.dataset.field, dateStr = currentDate.toISOString().split('T')[0];
                     const record = attendanceData.sections[section].attendance[dateStr][index];
                     currentModalInfo = { index, field };
                     document.getElementById('quantity-title').textContent = `${students[index]} - ${field.replace('Quantity', '')}`;
                     const currentQuantity = record[field] || '1';
                     quantityPreview.value = currentQuantity;
-                    stepperValueEl.textContent = parseInt(currentQuantity) || 1;
-                    paraSelector.value = "";
+                    stepperValueEl.textContent = parseInt(currentQuantity) || 1; paraSelector.value = "";
                     openModal('quantity-assistant-modal');
                     break;
-                case 'show-report':
-                    showStudentMonthlyReportModal(studentName);
-                    break;
+                case 'show-report': showStudentMonthlyReportModal(studentName); break;
                 case 'delete-student':
                     if (confirm(`کیا آپ واقعی طالب علم "${students[index]}" کو حذف کرنا چاہتے ہیں؟`)) {
+                        const studentToDelete = students[index];
                         students.splice(index, 1);
-                        delete attendanceData.studentDetails[students[index]];
+                        delete attendanceData.studentDetails[studentToDelete];
                         Object.values(attendanceData.sections[section].attendance).forEach(day => day.splice(index, 1));
-                        saveData();
-                        initApp();
+                        saveData(); initApp();
                     }
                     break;
             }
         });
         
         document.getElementById('add-student-btn').addEventListener('click', () => {
-            const nameInput = document.getElementById('new-student-name');
-            const phoneInput = document.getElementById('new-student-phone');
-            const newStudentName = nameInput.value.trim();
-            const section = sectionSelector.value;
-            const students = attendanceData.sections[section].students;
-
-            if (newStudentName && !students.includes(newStudentName)) {
-                students.push(newStudentName);
+            const nameInput = document.getElementById('new-student-name'), phoneInput = document.getElementById('new-student-phone');
+            const newName = nameInput.value.trim(), section = sectionSelector.value, students = attendanceData.sections[section].students;
+            if (newName && !students.includes(newName)) {
+                students.push(newName);
                 if (phoneInput.value.trim()) {
-                    if (!attendanceData.studentDetails[newStudentName]) attendanceData.studentDetails[newStudentName] = {};
-                    attendanceData.studentDetails[newStudentName].phone = phoneInput.value.trim();
+                    if (!attendanceData.studentDetails[newName]) attendanceData.studentDetails[newName] = {};
+                    attendanceData.studentDetails[newName].phone = phoneInput.value.trim();
                 }
-                saveData();
-                initApp();
-                nameInput.value = '';
-                phoneInput.value = '';
-            } else {
-                showToast("نام خالی ہے یا پہلے سے موجود ہے۔");
-            }
+                saveData(); initApp(); nameInput.value = ''; phoneInput.value = '';
+            } else { showToast("نام خالی ہے یا پہلے سے موجود ہے۔"); }
         });
         
-        // Quantity Assistant Listeners
-        document.getElementById('stepper-plus').addEventListener('click', () => {
-            let val = parseInt(stepperValueEl.textContent) + 1;
-            stepperValueEl.textContent = val;
-            if (/^\d+/.test(quantityPreview.value)) {
-                quantityPreview.value = quantityPreview.value.replace(/^\d+/, val);
-            } else {
-                quantityPreview.value = val;
-            }
-        });
-
-        document.getElementById('stepper-minus').addEventListener('click', () => {
-            let val = parseInt(stepperValueEl.textContent);
-            if (val > 1) {
-                val -= 1;
-                stepperValueEl.textContent = val;
-                if (/^\d+/.test(quantityPreview.value)) {
-                    quantityPreview.value = quantityPreview.value.replace(/^\d+/, val);
-                } else {
-                    quantityPreview.value = val;
-                }
-            }
-        });
-
-        document.getElementById('quick-btns-container').addEventListener('click', (e) => {
-            if (e.target.classList.contains('quick-btn')) {
-                if (/^\d+$/.test(quantityPreview.value)) {
-                    quantityPreview.value += ' ' + e.target.textContent;
-                } else {
-                    quantityPreview.value = (quantityPreview.value + ' ' + e.target.textContent).trim();
-                }
-            }
-        });
-        
-        paraSelector.addEventListener('change', () => { 
-            if (paraSelector.value) { 
-                quantityPreview.value = (quantityPreview.value + ` پارہ ${paraSelector.value}`).trim();
-                paraSelector.value = ""; 
-            } 
-        });
-
-        document.getElementById('clear-quantity-btn').addEventListener('click', () => {
-            quantityPreview.value = '';
-            stepperValueEl.textContent = '1';
-            quantityPreview.focus();
-        });
-
+        // Quantity Assistant
+        document.getElementById('stepper-plus').addEventListener('click', () => { let val = parseInt(stepperValueEl.textContent) + 1; stepperValueEl.textContent = val; quantityPreview.value = /^\d+/.test(quantityPreview.value) ? quantityPreview.value.replace(/^\d+/, val) : val; });
+        document.getElementById('stepper-minus').addEventListener('click', () => { let val = parseInt(stepperValueEl.textContent); if (val > 1) { val--; stepperValueEl.textContent = val; quantityPreview.value = /^\d+/.test(quantityPreview.value) ? quantityPreview.value.replace(/^\d+/, val) : val; } });
+        document.getElementById('quick-btns-container').addEventListener('click', (e) => { if (e.target.classList.contains('quick-btn')) { quantityPreview.value = (/^\d+$/.test(quantityPreview.value) ? quantityPreview.value + ' ' : quantityPreview.value ? quantityPreview.value + ' ' : '') + e.target.textContent; } });
+        paraSelector.addEventListener('change', () => { if (paraSelector.value) { quantityPreview.value = (quantityPreview.value + ` پارہ ${paraSelector.value}`).trim(); paraSelector.value = ""; } });
+        document.getElementById('clear-quantity-btn').addEventListener('click', () => { quantityPreview.value = ''; stepperValueEl.textContent = '1'; quantityPreview.focus(); });
         document.getElementById('save-quantity-assistant').addEventListener('click', () => {
-            const { index, field } = currentModalInfo;
-            const section = sectionSelector.value;
-            const dateStr = currentDate.toISOString().split('T')[0];
+            const { index, field } = currentModalInfo, section = sectionSelector.value, dateStr = currentDate.toISOString().split('T')[0];
             const value = quantityPreview.value.trim();
-            if (value) {
-                attendanceData.sections[section].attendance[dateStr][index][field] = value;
-                const baseField = field.replace('Quantity', '');
-                attendanceData.sections[section].attendance[dateStr][index][baseField] = true;
+            attendanceData.sections[section].attendance[dateStr][index][field] = value;
+            const baseField = field.replace('Quantity', '');
+            attendanceData.sections[section].attendance[dateStr][index][baseField] = !!value; // True if value is not empty, false if it is
+            saveData(); initApp(); closeModal('quantity-assistant-modal');
+        });
+
+        // --- Backup and Restore ---
+        document.getElementById('backup-btn').addEventListener('click', () => {
+            try {
+                const dataStr = JSON.stringify(attendanceData, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const dateSuffix = new Date().toISOString().split('T')[0];
+                a.href = url; a.download = `hifz_tracker_backup_${dateSuffix}.json`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('بیک اپ فائل ڈاؤن لوڈ ہو گئی ہے۔');
+            } catch (error) { showToast('بیک اپ بنانے میں خرابی ہوئی۔'); console.error(error); }
+        });
+
+        document.getElementById('restore-btn').addEventListener('click', () => restoreFileInput.click());
+        restoreFileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!confirm('کیا آپ واقعی بیک اپ بحال کرنا چاہتے ہیں؟ موجودہ تمام ڈیٹا مٹا دیا جائے گا۔')) {
+                event.target.value = null; // Reset file input
+                return;
             }
-            saveData();
-            initApp();
-            closeModal('quantity-assistant-modal');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const restoredData = JSON.parse(e.target.result);
+                    if (restoredData && restoredData.sections && restoredData.studentDetails) {
+                        localStorage.setItem(DATA_KEY, JSON.stringify(restoredData));
+                        loadData(); // Reload data into the app state
+                        initApp();  // Re-render the entire UI
+                        showToast('بیک اپ کامیابی سے بحال ہو گیا ہے۔');
+                    } else { throw new Error('Invalid file format.'); }
+                } catch (error) { showToast('فائل خراب ہے یا درست فارمیٹ میں نہیں۔'); console.error(error); }
+                event.target.value = null; // Reset file input
+            };
+            reader.onerror = () => { showToast('فائل پڑھنے میں خرابی ہوئی۔'); event.target.value = null; };
+            reader.readAsText(file);
         });
 
         // Close modals
