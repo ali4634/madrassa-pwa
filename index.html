@@ -10,7 +10,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="../assets/icon-192x192.png">
     
-    <!-- UPDATED: Using Font Awesome from CDN for reliability -->
+    <!-- Using Font Awesome from CDN for other icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <!-- Online Libraries -->
@@ -179,7 +179,13 @@
     </div>
 
     <!-- Modals -->
-    <div id="student-monthly-report-modal" class="modal"><div class="modal-content"><span class="close">×</span><h3 id="student-report-title"></h3><div id="student-report-content" style="max-height: 50vh; overflow-y: auto;"></div><div id="student-report-summary" style="margin-top: 15px; font-weight: bold;"></div><div class="share-buttons" style="display: flex; gap: 12px; margin-top: 15px; justify-content: center;"><button id="modal-share-whatsapp" style="background-color: #25D366; color: white; padding: 12px 18px; font-size: 1.1em; border:none; border-radius: 8px; cursor: pointer;"><i class="fab fa-whatsapp" style="margin-left: 5px;"></i>واٹس ایپ</button><button id="modal-share-pdf" style="background-color: #e74c3c; color: white; padding: 12px 18px; font-size: 1.1em; border:none; border-radius: 8px; cursor: pointer;"><i class="fas fa-file-pdf" style="margin-left: 5px;"></i>PDF</button></div></div></div>
+    <div id="student-monthly-report-modal" class="modal"><div class="modal-content"><span class="close">×</span><h3 id="student-report-title"></h3><div id="student-report-content" style="max-height: 50vh; overflow-y: auto;"></div><div id="student-report-summary" style="margin-top: 15px; font-weight: bold;"></div>
+        <!-- UPDATED: WhatsApp button in modal is now text-only -->
+        <div class="share-buttons" style="display: flex; gap: 12px; margin-top: 15px; justify-content: center;">
+            <button id="modal-share-whatsapp" style="background-color: #25D366; color: white; padding: 12px 18px; font-size: 1.1em; border:none; border-radius: 8px; cursor: pointer;">واٹس ایپ</button>
+            <button id="modal-share-pdf" style="background-color: #e74c3c; color: white; padding: 12px 18px; font-size: 1.1em; border:none; border-radius: 8px; cursor: pointer;"><i class="fas fa-file-pdf" style="margin-left: 5px;"></i>PDF</button>
+        </div>
+    </div></div>
     <div id="quantity-assistant-modal" class="modal"><div class="modal-content quantity-assistant"><span class="close">×</span><h2 id="quantity-title">مقدار درج کریں</h2>
         <input type="text" id="quantity-preview" class="preview">
         <div class="stepper"><span class="stepper-btn" id="stepper-minus">-</span><span id="stepper-value" class="stepper-value">1</span><span class="stepper-btn" id="stepper-plus">+</span></div>
@@ -262,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             row.className = record.present ? 'present-row' : 'absent-row';
             
+            // UPDATED: WhatsApp button is now a text button for reliability
             row.innerHTML = `
                 <td>
                     <span class="student-name-clickable" data-action="show-report" data-student-name="${student}">${student}</span>
@@ -296,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
                 <td>
                     <div class="attendance-cell-content" style="justify-content: center;">
-                        ${phone ? `<button class="action-btn" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" title="ماہانہ رپورٹ بھیجیں"><i class="fab fa-whatsapp"></i></button>` : ''}
+                        ${phone ? `<button class="small-btn" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" title="ماہانہ رپورٹ بھیجیں" style="background-color: #25D366; color: white;">واٹس ایپ</button>` : ''}
                     </div>
                 </td>
             `;
