@@ -10,8 +10,8 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="../assets/icon-192x192.png">
     
-    <!-- Local Libraries -->
-    <link rel="stylesheet" href="../assets/all.min.css"> 
+    <!-- UPDATED: Using Font Awesome from CDN for reliability -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <!-- Online Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -45,12 +45,27 @@
         .tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         .tab-content { display: none; padding: 12px; border: 1px solid #e0e0e0; border-top: none; }
         .tab-content.active { display: block; }
-        .date-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 8px 12px; background-color: var(--primary-color); color: white; border-radius: var(--border-radius); font-size: 0.9em; flex-wrap: wrap; gap: 10px;}
+        
+        .date-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 12px; 
+            padding: 4px 12px;
+            background-color: var(--primary-color); 
+            color: white; 
+            border-radius: var(--border-radius); 
+            gap: 10px;
+        }
+        .date-header h2 {
+            margin: 0;
+            font-size: 1em;
+        }
         .date-selector { display: flex; align-items: center; gap: 8px; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85em; }
         th, td { padding: 8px 10px; border-bottom: 1px solid #e0e0e0; vertical-align: middle; }
         
-        /* UPDATED: Central alignment for table cells */
         #attendance-table th, #attendance-table td { text-align: center; }
         #attendance-table th:first-child, #attendance-table td:first-child { text-align: right; }
 
@@ -59,28 +74,26 @@
         tr.absent-row { background-color: var(--absent-color); }
         .attendance-check { transform: scale(1.4); cursor: pointer; accent-color: var(--success-color); }
         
-        /* NEW: Wrapper for checkbox and quantity to ensure stable alignment */
         .attendance-cell-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Align to the top */
-            min-height: 50px; /* Ensures all cells have same base height */
+            justify-content: flex-start; 
+            min-height: 50px; 
         }
         
-        /* UPDATED: Improved styling for the quantity text */
         .quantity-info { 
             font-size: 0.8em; 
-            color: #555; /* Darker text */
+            color: #555;
             cursor: pointer; 
-            margin-top: 6px; /* Space from checkbox */
+            margin-top: 6px;
             padding: 2px 6px;
             line-height: 1.3;
             min-height: 1.3em; 
             min-width: 45px;
-            background-color: #f0f0f0; /* Badge-like background */
+            background-color: #f0f0f0;
             border: 1px solid #ddd;
-            border-radius: 4px; /* Rounded corners */
+            border-radius: 4px;
             text-align: center;
         }
 
@@ -129,9 +142,7 @@
         <div class="tab-content active" id="attendance-tab">
             <div class="date-header">
                 <div class="date-selector">
-                    <button class="small-btn" id="prev-day-btn">پچھلے دن</button>
                     <input type="date" id="date-picker">
-                    <button class="small-btn" id="next-day-btn">اگلے دن</button>
                 </div>
                 <h2 id="current-date"></h2>
             </div>
@@ -216,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedData) {
             try {
                 const parsedData = JSON.parse(savedData);
-                // Basic validation
                 if (parsedData && parsedData.sections) {
                     attendanceData = parsedData;
                 } else {
@@ -225,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } catch { 
                 console.error("Failed to parse data from localStorage.");
-                // Reset to default if data is corrupted
                 attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
             }
         }
@@ -253,7 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             row.className = record.present ? 'present-row' : 'absent-row';
             
-            // UPDATED: Table row generation with new structure for alignment
             row.innerHTML = `
                 <td>
                     <span class="student-name-clickable" data-action="show-report" data-student-name="${student}">${student}</span>
@@ -263,7 +271,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${phone}
                     </span>
                 </td>
-                <td><input type="checkbox" class="attendance-check" data-index="${index}" data-field="present" ${record.present ? 'checked' : ''}></td>
+                <td>
+                    <div class="attendance-cell-content" style="justify-content: center;">
+                        <input type="checkbox" class="attendance-check" data-index="${index}" data-field="present" ${record.present ? 'checked' : ''}>
+                    </div>
+                </td>
                 <td>
                     <div class="attendance-cell-content">
                         <input type="checkbox" class="attendance-check" data-index="${index}" data-field="lesson" ${record.lesson ? 'checked' : ''} ${!record.present ? 'disabled' : ''}>
@@ -283,7 +295,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </td>
                 <td>
-                    ${phone ? `<button class="action-btn" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" title="ماہانہ رپورٹ بھیجیں"><i class="fab fa-whatsapp"></i></button>` : ''}
+                    <div class="attendance-cell-content" style="justify-content: center;">
+                        ${phone ? `<button class="action-btn" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" title="ماہانہ رپورٹ بھیجیں"><i class="fab fa-whatsapp"></i></button>` : ''}
+                    </div>
                 </td>
             `;
             attendanceTableBody.appendChild(row);
@@ -423,7 +437,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const reportSummaryEl = document.getElementById('student-report-summary');
         const reportContentEl = document.getElementById('student-report-content');
         try {
-            // Added useCORS: true to handle local file access better
             const canvasOptions = { scale: 2, backgroundColor: null, useCORS: true };
             const canvasTitle = await html2canvas(reportTitleEl, canvasOptions);
             pdf.addImage(canvasTitle.toDataURL('image/png'), 'PNG', 10, 10, 190, 0);
@@ -475,24 +488,36 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(this.dataset.tab + '-tab').classList.add('active');
         }));
 
-        document.getElementById('date-picker').addEventListener('change', (e) => { const [y, m, d] = e.target.value.split('-'); currentDate = new Date(y, m - 1, d, 12); initApp(); });
-        document.getElementById('prev-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() - 1); initApp(); });
-        document.getElementById('next-day-btn').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() + 1); initApp(); });
-        sectionSelector.addEventListener('change', () => { localStorage.setItem('lastSection_v16', sectionSelector.value); initApp(); });
+        document.getElementById('date-picker').addEventListener('change', (e) => { 
+            const [y, m, d] = e.target.value.split('-'); 
+            currentDate = new Date(y, m - 1, d, 12); 
+            initApp(); 
+        });
+        sectionSelector.addEventListener('change', () => { 
+            localStorage.setItem('lastSection_v16', sectionSelector.value); 
+            initApp(); 
+        });
 
         attendanceTableBody.addEventListener('change', (e) => {
             if (e.target.classList.contains('attendance-check')) {
                 const index = e.target.dataset.index, field = e.target.dataset.field, dateStr = currentDate.toISOString().split('T')[0], section = sectionSelector.value;
                 const record = attendanceData.sections[section].attendance[dateStr][index];
                 record[field] = e.target.checked;
-                if (field === 'present' && !e.target.checked) record.lesson = record.homework = record.milestone = false;
-                if (e.target.checked && field !== 'present') {
+                if (field === 'present' && !e.target.checked) {
+                    record.lesson = record.homework = record.milestone = false;
+                }
+                if (e.target.checked && field !== 'present' && !record[field + 'Quantity']) {
                     const studentName = attendanceData.sections[section].students[index], quantityField = `${field}Quantity`;
                     currentModalInfo = { index, field: quantityField };
                     document.getElementById('quantity-title').textContent = `${studentName} - ${field.replace('Quantity', '')}`;
-                    stepperValueEl.textContent = 1; quantityPreview.value = '1'; paraSelector.value = "";
+                    stepperValueEl.textContent = 1; 
+                    quantityPreview.value = '1'; 
+                    paraSelector.value = "";
                     openModal('quantity-assistant-modal');
-                } else { saveData(); initApp(); }
+                } else { 
+                    saveData(); 
+                    initApp(); 
+                }
             }
         });
 
@@ -512,17 +537,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('quantity-title').textContent = `${students[index]} - ${field.replace('Quantity', '')}`;
                     const currentQuantity = record[field] || '1';
                     quantityPreview.value = currentQuantity;
-                    stepperValueEl.textContent = parseInt(currentQuantity) || 1; paraSelector.value = "";
+                    stepperValueEl.textContent = parseInt(currentQuantity) || 1; 
+                    paraSelector.value = "";
                     openModal('quantity-assistant-modal');
                     break;
-                case 'show-report': showStudentMonthlyReportModal(studentName); break;
+                case 'show-report': 
+                    showStudentMonthlyReportModal(studentName); 
+                    break;
                 case 'delete-student':
                     if (confirm(`کیا آپ واقعی طالب علم "${students[index]}" کو حذف کرنا چاہتے ہیں؟`)) {
                         const studentToDelete = students[index];
                         students.splice(index, 1);
                         delete attendanceData.studentDetails[studentToDelete];
                         Object.values(attendanceData.sections[section].attendance).forEach(day => day.splice(index, 1));
-                        saveData(); initApp();
+                        saveData(); 
+                        initApp();
                     }
                     break;
             }
@@ -537,8 +566,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!attendanceData.studentDetails[newName]) attendanceData.studentDetails[newName] = {};
                     attendanceData.studentDetails[newName].phone = phoneInput.value.trim();
                 }
-                saveData(); initApp(); nameInput.value = ''; phoneInput.value = '';
-            } else { showToast("نام خالی ہے یا پہلے سے موجود ہے۔"); }
+                saveData(); 
+                initApp(); 
+                nameInput.value = ''; 
+                phoneInput.value = '';
+            } else { 
+                showToast("نام خالی ہے یا پہلے سے موجود ہے۔"); 
+            }
         });
         
         // Quantity Assistant
@@ -552,8 +586,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = quantityPreview.value.trim();
             attendanceData.sections[section].attendance[dateStr][index][field] = value;
             const baseField = field.replace('Quantity', '');
-            attendanceData.sections[section].attendance[dateStr][index][baseField] = !!value; // True if value is not empty, false if it is
-            saveData(); initApp(); closeModal('quantity-assistant-modal');
+            attendanceData.sections[section].attendance[dateStr][index][baseField] = !!value; 
+            saveData(); 
+            initApp(); 
+            closeModal('quantity-assistant-modal');
         });
 
         // --- Backup and Restore ---
@@ -568,7 +604,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.appendChild(a); a.click(); document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 showToast('بیک اپ فائل ڈاؤن لوڈ ہو گئی ہے۔');
-            } catch (error) { showToast('بیک اپ بنانے میں خرابی ہوئی۔'); console.error(error); }
+            } catch (error) { 
+                showToast('بیک اپ بنانے میں خرابی ہوئی۔'); 
+                console.error(error); 
+            }
         });
 
         document.getElementById('restore-btn').addEventListener('click', () => restoreFileInput.click());
@@ -576,7 +615,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const file = event.target.files[0];
             if (!file) return;
             if (!confirm('کیا آپ واقعی بیک اپ بحال کرنا چاہتے ہیں؟ موجودہ تمام ڈیٹا مٹا دیا جائے گا۔')) {
-                event.target.value = null; // Reset file input
+                event.target.value = null; 
                 return;
             }
             const reader = new FileReader();
@@ -585,14 +624,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     const restoredData = JSON.parse(e.target.result);
                     if (restoredData && restoredData.sections && restoredData.studentDetails) {
                         localStorage.setItem(DATA_KEY, JSON.stringify(restoredData));
-                        loadData(); // Reload data into the app state
-                        initApp();  // Re-render the entire UI
+                        loadData(); 
+                        initApp();  
                         showToast('بیک اپ کامیابی سے بحال ہو گیا ہے۔');
-                    } else { throw new Error('Invalid file format.'); }
-                } catch (error) { showToast('فائل خراب ہے یا درست فارمیٹ میں نہیں۔'); console.error(error); }
-                event.target.value = null; // Reset file input
+                    } else { 
+                        throw new Error('Invalid file format.'); 
+                    }
+                } catch (error) { 
+                    showToast('فائل خراب ہے یا درست فارمیٹ میں نہیں۔'); 
+                    console.error(error); 
+                }
+                event.target.value = null; 
             };
-            reader.onerror = () => { showToast('فائل پڑھنے میں خرابی ہوئی۔'); event.target.value = null; };
+            reader.onerror = () => { 
+                showToast('فائل پڑھنے میں خرابی ہوئی۔'); 
+                event.target.value = null; 
+            };
             reader.readAsText(file);
         });
 
