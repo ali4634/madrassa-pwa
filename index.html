@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -146,6 +146,9 @@
                 </div>
                 <h2 id="current-date"></h2>
             </div>
+            <div class="input-group" style="margin-top: 15px;">
+                <input type="search" id="search-attendance" placeholder="طالب علم تلاش کریں..." class="input-group input" style="width:100%; font-size: 1em;">
+            </div>
             <div style="overflow-x: auto;"><table id="attendance-table"><thead><tr><th>نام</th><th>حاضری</th><th>سبق</th><th>سبقی</th><th>منزل</th><th>کاروائی</th></tr></thead><tbody></tbody></table></div>
         </div>
         <div class="tab-content" id="stats-tab">
@@ -164,6 +167,9 @@
             </div>
              <div class="management-section">
                 <h3 style="margin-top: 20px;">موجودہ طلباء کی فہرست</h3>
+                 <div class="input-group">
+                    <input type="search" id="search-student-list" placeholder="فہرست میں تلاش کریں..." class="input-group input" style="width:100%; font-size: 1em; margin-bottom: 5px;">
+                </div>
                 <div id="student-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;"></div>
             </div>
             <div class="management-section">
@@ -495,6 +501,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const existing = attendanceData.sections[section].attendance[dateStr] || [];
             attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existing[i] || defaultRec());
         }
+        
+        // Clear search fields on re-init
+        document.getElementById('search-attendance').value = '';
+        document.getElementById('search-student-list').value = '';
+        
         updateDateDisplay();
         renderAttendanceTable();
         renderStudentList();
@@ -658,6 +669,31 @@ document.addEventListener('DOMContentLoaded', function() {
             initApp();
             closeModal('name-modal');
             showToast('نام کامیابی سے تبدیل کر دیا گیا۔');
+        });
+
+        // Search Listeners
+        document.getElementById('search-attendance').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim().toLowerCase();
+            const rows = attendanceTableBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const studentNameEl = row.querySelector('.student-name-clickable');
+                if (studentNameEl) {
+                    const studentName = studentNameEl.textContent.trim().toLowerCase();
+                    row.style.display = studentName.includes(searchTerm) ? '' : 'none';
+                }
+            });
+        });
+
+        document.getElementById('search-student-list').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim().toLowerCase();
+            const items = studentListContainer.querySelectorAll('div');
+            items.forEach(item => {
+                const studentNameEl = item.querySelector('span');
+                if (studentNameEl) {
+                    const studentName = studentNameEl.textContent.trim().toLowerCase();
+                    item.style.display = studentName.includes(searchTerm) ? 'flex' : 'none';
+                }
+            });
         });
         
         // Quantity Assistant
