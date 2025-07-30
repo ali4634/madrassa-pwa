@@ -106,7 +106,7 @@
         .input-group { margin-bottom: 10px; }
         .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 8px; border-radius: var(--border-radius); border: 1px solid #ddd; font-family: inherit; font-size: 1em; box-sizing: border-box; }
         .phone-number { font-size: 0.85em; color: #555; display: block; }
-        .phone-number i { cursor: pointer; font-size: 1.1em; margin: 0 4px; }
+        .phone-number i { cursor: pointer; font-size: 1.1em; margin: 0 4px; color: var(--secondary-color); }
         .action-btn { background-color: var(--success-color); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2em; cursor: pointer; }
         .student-name-clickable { color: var(--secondary-color); font-weight: bold; cursor: pointer; font-size: 1.2em; }
         #toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--dark-color); color: white; padding: 12px 20px; border-radius: var(--border-radius); z-index: 2000; visibility: hidden; opacity: 0; transition: opacity 0.5s, visibility 0.5s; }
@@ -180,7 +180,6 @@
 
     <!-- Modals -->
     <div id="student-monthly-report-modal" class="modal"><div class="modal-content"><span class="close">×</span><h3 id="student-report-title"></h3><div id="student-report-content" style="max-height: 50vh; overflow-y: auto;"></div><div id="student-report-summary" style="margin-top: 15px; font-weight: bold;"></div>
-        <!-- UPDATED: WhatsApp button in modal is now text-only -->
         <div class="share-buttons" style="display: flex; gap: 12px; margin-top: 15px; justify-content: center;">
             <button id="modal-share-whatsapp" style="background-color: #25D366; color: white; padding: 12px 18px; font-size: 1.1em; border:none; border-radius: 8px; cursor: pointer;">واٹس ایپ</button>
             <button id="modal-share-pdf" style="background-color: #e74c3c; color: white; padding: 12px 18px; font-size: 1.1em; border:none; border-radius: 8px; cursor: pointer;"><i class="fas fa-file-pdf" style="margin-left: 5px;"></i>PDF</button>
@@ -268,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             row.className = record.present ? 'present-row' : 'absent-row';
             
-            // UPDATED: WhatsApp button is now a text button for reliability
             row.innerHTML = `
                 <td>
                     <span class="student-name-clickable" data-action="show-report" data-student-name="${student}">${student}</span>
@@ -329,30 +327,57 @@ document.addEventListener('DOMContentLoaded', function() {
         const students = attendanceData.sections[section]?.students || [];
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
 
-        let presentCount = 0, lessonCount = 0, homeworkCount = 0, milestoneCount = 0;
-        if (records) {
-            records.forEach(record => {
-                if (record && record.present) {
+        let presentCount = 0;
+        let absentStudents = [], lessonStudents = [], homeworkStudents = [], milestoneStudents = [];
+        
+        if (students.length > 0) {
+            students.forEach((student, index) => {
+                const record = records[index] || {};
+                if (record.present) {
                     presentCount++;
-                    if (record.lesson) lessonCount++;
-                    if (record.homework) homeworkCount++;
-                    if (record.milestone) milestoneCount++;
+                    if (record.lesson) lessonStudents.push(student);
+                    if (record.homework) homeworkStudents.push(student);
+                    if (record.milestone) milestoneStudents.push(student);
+                } else {
+                    absentStudents.push(student);
                 }
             });
         }
-        
-        const absentCount = students.length - presentCount;
+
         const statsContainer = document.getElementById('stats-container');
-        statsContainer.innerHTML = `
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; text-align: center;">
-                <div style="background-color: #e8f5e9; padding: 15px; border-radius: 8px;"><h4>حاضر طلباء</h4><p style="font-size: 1.5em; font-weight: bold;">${presentCount}</p></div>
-                <div style="background-color: #ffecec; padding: 15px; border-radius: 8px;"><h4>غیر حاضر طلباء</h4><p style="font-size: 1.5em; font-weight: bold;">${absentCount}</p></div>
-                <div style="background-color: #e3f2fd; padding: 15px; border-radius: 8px;"><h4>سبق سنانے والے</h4><p style="font-size: 1.5em; font-weight: bold;">${lessonCount}</p></div>
-                <div style="background-color: #fff9c4; padding: 15px; border-radius: 8px;"><h4>سبقی سنانے والے</h4><p style="font-size: 1.5em; font-weight: bold;">${homeworkCount}</p></div>
-                 <div style="background-color: #fce4ec; padding: 15px; border-radius: 8px;"><h4>منزل سنانے والے</h4><p style="font-size: 1.5em; font-weight: bold;">${milestoneCount}</p></div>
+
+        const createStatCard = (title, count, names, bgColor, listTitle) => {
+            let namesHtml = '';
+            if (names && names.length > 0) {
+                namesHtml = `
+                <div style="text-align: right; margin-top: 10px; font-size: 0.95em; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px;">
+                    <p style="font-weight: bold; margin-bottom: 5px; color: var(--dark-color);">${listTitle}:</p>
+                    <ul style="list-style-type: none; padding-right: 10px; margin: 0; column-count: 2; column-gap: 10px;">
+                        ${names.map(name => `<li style="margin-bottom: 4px;">${name}</li>`).join('')}
+                    </ul>
+                </div>`;
+            }
+            return `
+            <div style="background-color: ${bgColor}; padding: 15px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                <div style="display: flex; justify-content: space-between; align-items: center; text-align: right;">
+                    <h4 style="margin: 0; font-size: 1.1em;">${title}</h4>
+                    <p style="font-size: 1.8em; font-weight: bold; margin: 0; color: var(--dark-color);">${count}</p>
+                </div>
+                ${namesHtml}
             </div>`;
+        };
+        
+        statsContainer.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                ${createStatCard('حاضر طلباء', presentCount, null, '#e8f5e9', '')}
+                ${createStatCard('غیر حاضر طلباء', absentStudents.length, absentStudents, '#ffecec', 'غیر حاضر طلباء کی فہرست')}
+                ${createStatCard('سبق سنانے والے', lessonStudents.length, lessonStudents, '#e3f2fd', 'سبق سنانے والوں کی فہرست')}
+                ${createStatCard('سبقی سنانے والے', homeworkStudents.length, homeworkStudents, '#fff9c4', 'سبقی سنانے والوں کی فہرست')}
+                ${createStatCard('منزل سنانے والے', milestoneStudents.length, milestoneStudents, '#fce4ec', 'منزل سنانے والوں کی فہرست')}
+            </div>
+        `;
     };
-    
+
     // --- WhatsApp and Report Generation ---
     const formatPhoneNumberForWhatsApp = (phone) => {
         let cleaned = phone.replace(/\D/g, '');
@@ -561,6 +586,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         initApp();
                     }
                     break;
+                case 'edit-name':
+                    currentModalInfo = { index, oldName: students[index] };
+                    document.getElementById('name-input').value = students[index];
+                    openModal('name-modal');
+                    break;
+                case 'edit-phone':
+                    currentModalInfo = { studentName };
+                    document.getElementById('phone-input').value = (attendanceData.studentDetails[studentName] || {}).phone || '';
+                    openModal('phone-modal');
+                    break;
             }
         });
         
@@ -580,6 +615,49 @@ document.addEventListener('DOMContentLoaded', function() {
             } else { 
                 showToast("نام خالی ہے یا پہلے سے موجود ہے۔"); 
             }
+        });
+
+        document.getElementById('save-phone').addEventListener('click', () => {
+            const { studentName } = currentModalInfo;
+            const newPhone = document.getElementById('phone-input').value.trim();
+            if (!attendanceData.studentDetails[studentName]) {
+                attendanceData.studentDetails[studentName] = {};
+            }
+            attendanceData.studentDetails[studentName].phone = newPhone;
+            saveData();
+            initApp();
+            closeModal('phone-modal');
+            showToast('فون نمبر اپ ڈیٹ ہو گیا۔');
+        });
+
+        document.getElementById('save-name').addEventListener('click', () => {
+            const { index, oldName } = currentModalInfo;
+            const newName = document.getElementById('name-input').value.trim();
+            const section = sectionSelector.value;
+            const students = attendanceData.sections[section].students;
+
+            if (!newName) {
+                showToast('نام خالی نہیں ہو سکتا۔');
+                return;
+            }
+            if (newName !== oldName && students.includes(newName)) {
+                showToast('یہ نام پہلے سے موجود ہے۔');
+                return;
+            }
+
+            students[index] = newName;
+
+            if (attendanceData.studentDetails[oldName]) {
+                attendanceData.studentDetails[newName] = attendanceData.studentDetails[oldName];
+                if (oldName !== newName) {
+                    delete attendanceData.studentDetails[oldName];
+                }
+            }
+            
+            saveData();
+            initApp();
+            closeModal('name-modal');
+            showToast('نام کامیابی سے تبدیل کر دیا گیا۔');
         });
         
         // Quantity Assistant
