@@ -29,6 +29,7 @@
             --primary-color: #3498db; --secondary-color: #2980b9; --success-color: #27ae60;
             --danger-color: #e74c3c; --warning-color: #f39c12; --light-color: #ecf0f1;
             --dark-color: #2c3e50; --absent-color: #ffecec; --present-color: #e8f5e9;
+            --inactive-color: #fff3e0; /* Color for inactive students card */
             --border-radius: 8px; --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         body {
@@ -152,7 +153,7 @@
             <div style="overflow-x: auto;"><table id="attendance-table"><thead><tr><th>نام</th><th>حاضری</th><th>سبق</th><th>سبقی</th><th>منزل</th><th>کاروائی</th></tr></thead><tbody></tbody></table></div>
         </div>
         <div class="tab-content" id="stats-tab">
-             <h2>آج کا خلاصہ</h2>
+             <h2>اعداد و شمار</h2>
              <div class="stats-container" id="stats-container">
                  <!-- Stats cards will be inserted here by JS -->
              </div>
@@ -209,7 +210,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();
     let attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
-    const DATA_KEY = 'attendanceData_v16_tested';
+    const DATA_KEY = 'attendanceData_v17_final'; // Updated key to avoid conflicts
     let currentModalInfo = {};
 
     // --- DOM Elements ---
@@ -250,12 +251,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         if (!attendanceData.studentDetails) attendanceData.studentDetails = {};
-        sectionSelector.value = localStorage.getItem('lastSection_v16') || 'section1';
+        sectionSelector.value = localStorage.getItem('lastSection_v17') || 'section1';
     };
 
     // --- UI Rendering ---
     const updateDateDisplay = () => {
-        document.getElementById('date-picker').value = currentDate.toISOString().split('T')[0];
+        document.getElementById('date-picker').valueAsDate = currentDate;
         document.getElementById('current-date').textContent = currentDate.toLocaleDateString('ur-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     };
 
@@ -266,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const records = attendanceData.sections[section]?.attendance[dateStr] || [];
         
         attendanceTableBody.innerHTML = '';
+        if (!students.length) return;
+
         students.forEach((student, index) => {
             const record = records[index] || {};
             const studentDetail = attendanceData.studentDetails[student] || {};
@@ -307,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
                 <td>
                     <div class="attendance-cell-content" style="justify-content: center;">
-                        ${phone ? `<button class="small-btn" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" title="ماہانہ رپورٹ بھیجیں" style="background-color: #25D366; color: white;">واٹس ایپ</button>` : ''}
+                        ${phone ? `<button class="small-btn" data-action="share-whatsapp" data-student-name="${student}" data-phone="${phone}" title="ماہانہ رپورٹ بھیجیں" style="background-color: #25D366; color: white;"><i class="fab fa-whatsapp"></i></button>` : ''}
                     </div>
                 </td>
             `;
@@ -325,6 +328,33 @@ document.addEventListener('DOMContentLoaded', function() {
             item.innerHTML = `<span>${student}</span><button class="small-btn" data-action="delete-student" data-index="${index}" style="background-color: var(--danger-color); color:white;">حذف</button>`;
             studentListContainer.appendChild(item);
         });
+    };
+
+    // --- NEW: Function to find inactive students ---
+    const findInactiveStudents = () => {
+        const section = sectionSelector.value;
+        const students = attendanceData.sections[section]?.students || [];
+        const attendance = attendanceData.sections[section]?.attendance || {};
+        const inactiveStudents = [];
+
+        students.forEach((student, studentIndex) => {
+            let hasRecitedInLastWeek = false;
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(currentDate);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+
+                const record = attendance[dateStr] && attendance[dateStr][studentIndex];
+                if (record && (record.lesson || record.homework || record.milestone)) {
+                    hasRecitedInLastWeek = true;
+                    break; // No need to check further for this student
+                }
+            }
+            if (!hasRecitedInLastWeek) {
+                inactiveStudents.push(student);
+            }
+        });
+        return inactiveStudents;
     };
     
     const renderStats = () => {
@@ -351,6 +381,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const statsContainer = document.getElementById('stats-container');
+        
+        // --- NEW: Get inactive students ---
+        const inactiveStudentsList = findInactiveStudents();
 
         const createStatCard = (title, count, names, bgColor, listTitle) => {
             let namesHtml = '';
@@ -374,12 +407,18 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         statsContainer.innerHTML = `
+            <h3 style="text-align:center;">آج کا خلاصہ (${currentDate.toLocaleDateString('ur-PK', {month: 'long', day: 'numeric'})})</h3>
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 ${createStatCard('حاضر طلباء', presentCount, null, '#e8f5e9', '')}
                 ${createStatCard('غیر حاضر طلباء', absentStudents.length, absentStudents, '#ffecec', 'غیر حاضر طلباء کی فہرست')}
                 ${createStatCard('سبق سنانے والے', lessonStudents.length, lessonStudents, '#e3f2fd', 'سبق سنانے والوں کی فہرست')}
                 ${createStatCard('سبقی سنانے والے', homeworkStudents.length, homeworkStudents, '#fff9c4', 'سبقی سنانے والوں کی فہرست')}
                 ${createStatCard('منزل سنانے والے', milestoneStudents.length, milestoneStudents, '#fce4ec', 'منزل سنانے والوں کی فہرست')}
+            </div>
+            <hr style="margin: 20px 0;">
+            <h3 style="text-align:center;">ہفتہ وار کارکردگی</h3>
+             <div style="display: flex; flex-direction: column; gap: 12px;">
+                ${createStatCard('ایک ہفتے سے غیر فعال طلباء', inactiveStudentsList.length, inactiveStudentsList, 'var(--inactive-color)', 'غیر فعال طلباء کی فہرست')}
             </div>
         `;
     };
@@ -502,7 +541,6 @@ document.addEventListener('DOMContentLoaded', function() {
             attendanceData.sections[section].attendance[dateStr] = Array(students.length).fill(null).map((_, i) => existing[i] || defaultRec());
         }
         
-        // Clear search fields on re-init
         document.getElementById('search-attendance').value = '';
         document.getElementById('search-student-list').value = '';
         
@@ -528,16 +566,20 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.tab.active')?.classList.remove('active');
             document.querySelector('.tab-content.active')?.classList.remove('active');
             this.classList.add('active');
-            document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+            const newTabContent = document.getElementById(this.dataset.tab + '-tab');
+            newTabContent.classList.add('active');
+            // Re-render stats if stats tab is opened
+            if (this.dataset.tab === 'stats') {
+                renderStats();
+            }
         }));
 
         document.getElementById('date-picker').addEventListener('change', (e) => { 
-            const [y, m, d] = e.target.value.split('-'); 
-            currentDate = new Date(y, m - 1, d, 12); 
+            currentDate = e.target.valueAsDate || new Date();
             initApp(); 
         });
         sectionSelector.addEventListener('change', () => { 
-            localStorage.setItem('lastSection_v16', sectionSelector.value); 
+            localStorage.setItem('lastSection_v17', sectionSelector.value); 
             initApp(); 
         });
 
@@ -549,18 +591,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (field === 'present' && !e.target.checked) {
                     record.lesson = record.homework = record.milestone = false;
                 }
-                if (e.target.checked && field !== 'present' && !record[field + 'Quantity']) {
-                    const studentName = attendanceData.sections[section].students[index], quantityField = `${field}Quantity`;
-                    currentModalInfo = { index, field: quantityField };
-                    document.getElementById('quantity-title').textContent = `${studentName} - ${field.replace('Quantity', '')}`;
-                    stepperValueEl.textContent = 1; 
-                    quantityPreview.value = '1'; 
-                    paraSelector.value = "";
-                    openModal('quantity-assistant-modal');
-                } else { 
-                    saveData(); 
-                    initApp(); 
-                }
+                saveData(); 
+                renderAttendanceTable();
             }
         });
 
@@ -592,7 +624,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         const studentToDelete = students[index];
                         students.splice(index, 1);
                         delete attendanceData.studentDetails[studentToDelete];
-                        Object.values(attendanceData.sections[section].attendance).forEach(day => day.splice(index, 1));
+                        Object.values(attendanceData.sections[section].attendance).forEach(day => {
+                           if(day.length > index) day.splice(index, 1)
+                        });
                         saveData(); 
                         initApp();
                     }
@@ -615,6 +649,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const newName = nameInput.value.trim(), section = sectionSelector.value, students = attendanceData.sections[section].students;
             if (newName && !students.includes(newName)) {
                 students.push(newName);
+                 const dateStr = currentDate.toISOString().split('T')[0];
+                if(attendanceData.sections[section].attendance[dateStr]){
+                    attendanceData.sections[section].attendance[dateStr].push({ present: false, lesson: false, homework: false, milestone: false, lessonQuantity: '', homeworkQuantity: '', milestoneQuantity: '' });
+                }
                 if (phoneInput.value.trim()) {
                     if (!attendanceData.studentDetails[newName]) attendanceData.studentDetails[newName] = {};
                     attendanceData.studentDetails[newName].phone = phoneInput.value.trim();
@@ -709,7 +747,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const baseField = field.replace('Quantity', '');
             attendanceData.sections[section].attendance[dateStr][index][baseField] = !!value; 
             saveData(); 
-            initApp(); 
+            renderAttendanceTable(); 
             closeModal('quantity-assistant-modal');
         });
 
