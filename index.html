@@ -176,6 +176,7 @@
             <div class="management-section">
                 <h3>بیک اپ اور بحالی</h3>
                 <p style="font-size:0.9em; color:#555;">اپنے تمام ڈیٹا کا بیک اپ ڈاؤن لوڈ کریں یا پہلے سے محفوظ شدہ بیک اپ کو بحال کریں۔</p>
+                <p style="font-size:0.8em; color:var(--danger-color); margin-top:-5px; margin-bottom:10px;"><b>نوٹ:</b> بیک اپ فائل آپ کے فون یا کمپیوٹر کے 'Downloads' فولڈر میں محفوظ ہو جائے گی۔</p>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button id="backup-btn" class="save-btn-full" style="background-color:var(--primary-color);">ڈیٹا کا بیک اپ لیں</button>
                     <button id="restore-btn" class="save-btn-full" style="background-color:var(--warning-color);">ڈیٹا بحال کریں</button>
@@ -210,7 +211,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();
     let attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
-    const DATA_KEY = 'attendanceData_v17_final'; // Updated key to avoid conflicts
+    const DATA_KEY = 'attendanceData_v18_detailed_stats'; // Updated key
     let currentModalInfo = {};
 
     // --- DOM Elements ---
@@ -242,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (parsedData && parsedData.sections) {
                     attendanceData = parsedData;
                 } else {
-                    console.error("Loaded data is not in the correct format.");
                     throw new Error("Invalid data format");
                 }
             } catch { 
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         if (!attendanceData.studentDetails) attendanceData.studentDetails = {};
-        sectionSelector.value = localStorage.getItem('lastSection_v17') || 'section1';
+        sectionSelector.value = localStorage.getItem('lastSection_v18') || 'section1';
     };
 
     // --- UI Rendering ---
@@ -330,27 +330,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // --- NEW: Function to find inactive students ---
-    const findInactiveStudents = () => {
+    // --- NEW: Function to find inactive students by specific category ---
+    const findInactiveStudentsByCategory = (category) => {
         const section = sectionSelector.value;
         const students = attendanceData.sections[section]?.students || [];
+        if (!students.length) return [];
+        
         const attendance = attendanceData.sections[section]?.attendance || {};
         const inactiveStudents = [];
 
         students.forEach((student, studentIndex) => {
-            let hasRecitedInLastWeek = false;
+            let hasRecitedInCategory = false;
+            // Check last 7 days, including the currently selected date
             for (let i = 0; i < 7; i++) {
                 const date = new Date(currentDate);
                 date.setDate(date.getDate() - i);
                 const dateStr = date.toISOString().split('T')[0];
 
                 const record = attendance[dateStr] && attendance[dateStr][studentIndex];
-                if (record && (record.lesson || record.homework || record.milestone)) {
-                    hasRecitedInLastWeek = true;
-                    break; // No need to check further for this student
+
+                // The category can be 'lesson', 'homework', or 'milestone'
+                if (record && record[category]) {
+                    hasRecitedInCategory = true;
+                    break; // Found activity, no need to check further for this student
                 }
             }
-            if (!hasRecitedInLastWeek) {
+            if (!hasRecitedInCategory) {
                 inactiveStudents.push(student);
             }
         });
@@ -382,8 +387,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const statsContainer = document.getElementById('stats-container');
         
-        // --- NEW: Get inactive students ---
-        const inactiveStudentsList = findInactiveStudents();
+        // --- NEW: Get inactive students by each category ---
+        const inactiveInLesson = findInactiveStudentsByCategory('lesson');
+        const inactiveInHomework = findInactiveStudentsByCategory('homework');
+        const inactiveInMilestone = findInactiveStudentsByCategory('milestone');
 
         const createStatCard = (title, count, names, bgColor, listTitle) => {
             let namesHtml = '';
@@ -416,9 +423,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${createStatCard('منزل سنانے والے', milestoneStudents.length, milestoneStudents, '#fce4ec', 'منزل سنانے والوں کی فہرست')}
             </div>
             <hr style="margin: 20px 0;">
-            <h3 style="text-align:center;">ہفتہ وار کارکردگی</h3>
+            <h3 style="text-align:center;">ہفتہ وار کارکردگی کا جائزہ</h3>
              <div style="display: flex; flex-direction: column; gap: 12px;">
-                ${createStatCard('ایک ہفتے سے غیر فعال طلباء', inactiveStudentsList.length, inactiveStudentsList, 'var(--inactive-color)', 'غیر فعال طلباء کی فہرست')}
+                ${createStatCard('جنہوں نے 7 دن سے سبق نہیں سنایا', inactiveInLesson.length, inactiveInLesson, 'var(--inactive-color)', 'طلباء کی فہرست')}
+                ${createStatCard('جنہوں نے 7 دن سے سبقی نہیں سنائی', inactiveInHomework.length, inactiveInHomework, 'var(--inactive-color)', 'طلباء کی فہرست')}
+                ${createStatCard('جنہوں نے 7 دن سے منزل نہیں سنائی', inactiveInMilestone.length, inactiveInMilestone, 'var(--inactive-color)', 'طلباء کی فہرست')}
             </div>
         `;
     };
@@ -568,7 +577,6 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('active');
             const newTabContent = document.getElementById(this.dataset.tab + '-tab');
             newTabContent.classList.add('active');
-            // Re-render stats if stats tab is opened
             if (this.dataset.tab === 'stats') {
                 renderStats();
             }
@@ -579,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
             initApp(); 
         });
         sectionSelector.addEventListener('change', () => { 
-            localStorage.setItem('lastSection_v17', sectionSelector.value); 
+            localStorage.setItem('lastSection_v18', sectionSelector.value); 
             initApp(); 
         });
 
@@ -762,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 a.href = url; a.download = `hifz_tracker_backup_${dateSuffix}.json`;
                 document.body.appendChild(a); a.click(); document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                showToast('بیک اپ فائل ڈاؤن لوڈ ہو گئی ہے۔');
+                showToast("بیک اپ فائل 'Downloads' فولڈر میں محفوظ کر دی گئی ہے۔");
             } catch (error) { 
                 showToast('بیک اپ بنانے میں خرابی ہوئی۔'); 
                 console.error(error); 
