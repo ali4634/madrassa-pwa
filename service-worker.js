@@ -1,22 +1,23 @@
-  // اس ریپوزٹری کے لیے کیش کا نیا نام اور ورژن
-const staticCacheName = 'madrassa-pwa-static-v1';
+// اس ریپوزٹری کے لیے کیش کا نیا نام اور ورژن
+const staticCacheName = 'madrassa-pwa-static-v2';
 
-// آپ کی ریپوزٹری میں موجود فائلوں کی درست لسٹ
+// تمام پاتھ کو relative (./) کردیا گیا ہے تاکہ وہ ہر حال میں کام کریں
 const assets = [
-    '/madrassa-pwa/',
-    '/madrassa-pwa/index.html',
-    '/madrassa-pwa/manifest.json',
-    '/madrassa-pwa/icon-192.png',
-    '/madrassa-pwa/icon-512.png'
-    // نوٹ: اس لسٹ میں style.css یا script.js شامل نہیں کیونکہ وہ موجود نہیں ہیں
+    './',
+    './index.html',
+    './manifest.json',
+    './icon-192.png',
+    './icon-512.png'
 ];
 
 // انسٹال ایونٹ: سروس ورکر انسٹال ہوتے وقت یہ تمام فائلیں کیش کر لیتا ہے
 self.addEventListener('install', evt => {
     evt.waitUntil(
         caches.open(staticCacheName).then(cache => {
-            console.log('caching assets for madrassa-pwa');
+            console.log('caching assets with relative paths');
             return cache.addAll(assets);
+        }).catch(err => {
+            console.error('Failed to cache assets:', err); // ایرر دیکھنے کے لیے
         })
     );
 });
