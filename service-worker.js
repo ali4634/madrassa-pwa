@@ -1,46 +1,58 @@
-// کیش کا نیا ورژن تاکہ براؤزر لازمی اپ ڈیٹ کرے
-const staticCacheName = 'hifz-tracker-v2';
+const staticCacheName = 'hifz-tracker-static-v3'; // مقامی فائلوں کا کیش
+const dynamicCacheName = 'hifz-tracker-dynamic-v3'; // بیرونی فائلوں کا کیش
 
-// وہ تمام فائلیں جو آف لائن چلانے کے لیے کیش کرنی ہیں (درست پاتھ کے ساتھ)
-const assetsToCache = [
+// وہ مقامی فائلیں جو انسٹال ہوتے ہی کیش ہونی چاہییں
+const staticAssets = [
     './',
     './index.html',
     './manifest.json',
     './icon-192.png',
-    './icon-512.png',
-    // آن لائن لائبریریاں بھی کیش کی جا رہی ہیں
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+    './icon-512.png'
 ];
 
-// انسٹال ایونٹ
+// انسٹال ایونٹ: صرف مقامی فائلیں کیش کرتا ہے
 self.addEventListener('install', evt => {
     evt.waitUntil(
         caches.open(staticCacheName).then(cache => {
-            console.log('Caching shell assets with correct paths');
-            return cache.addAll(assetsToCache);
+            console.log('Caching static assets');
+            return cache.addAll(staticAssets);
         })
     );
 });
 
-// ایکٹیویٹ ایونٹ
+// ایکٹیویٹ ایونٹ: پرانے تمام کیش کو صاف کرتا ہے
 self.addEventListener('activate', evt => {
     evt.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(keys
-                .filter(key => key !== staticCacheName)
+                .filter(key => key !== staticCacheName && key !== dynamicCacheName)
                 .map(key => caches.delete(key))
             );
         })
     );
 });
 
-// فیچ ایونٹ
+// فیچ ایونٹ: یہ ہے سب سے اہم حصہ
 self.addEventListener('fetch', evt => {
     evt.respondWith(
         caches.match(evt.request).then(cacheRes => {
-            return cacheRes || fetch(evt.request);
+            // اگر فائل کیش میں موجود ہے تو وہیں سے دے دو
+            if (cacheRes) {
+                return cacheRes;
+            }
+            
+            // اگر کیش میں نہیں ہے، تو نیٹ ورک سے لاؤ
+            return fetch(evt.request).then(fetchRes => {
+                // اور اس نئی فائل کو ڈائنامک کیش میں محفوظ کر لو
+                return caches.open(dynamicCacheName).then(cache => {
+                    // response کو کلون کرنا ضروری ہے کیونکہ اسے دو جگہ استعمال کیا جا رہا ہے
+                    cache.put(evt.request.url, fetchRes.clone());
+                    return fetchRes;
+                });
+            });
+        }).catch(() => {
+            // اگر نیٹ ورک بھی فیل ہو جائے (یعنی صارف مکمل آف لائن ہے)
+            // تو یہاں ایک آف لائن فال بیک صفحہ دکھایا جا سکتا ہے
         })
     );
 });
