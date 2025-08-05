@@ -1,14 +1,14 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Hifaz Tracker</title>
     
-    <!-- Manifest and Icons -->
+    <!-- Manifest and Icons (پاتھ درست کر دیے گئے ہیں) -->
     <meta name="theme-color" content="#3498db"/>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icon-192x192.png">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     
     <!-- Using Font Awesome from CDN for other icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -18,10 +18,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* Urdu font is now loaded locally from assets folder */
+        /* Urdu font is now loaded locally (پاتھ درست کر دیا گیا ہے) */
         @font-face {
             font-family: 'Noto Nastaliq Urdu';
-            src: url('../assets/fonts/NotoNastaliqUrdu-VariableFont_wght.ttf') format('truetype');
+            src: url('./assets/fonts/NotoNastaliqUrdu-VariableFont_wght.ttf') format('truetype');
             font-weight: 400 700;
         }
 
@@ -208,7 +208,20 @@
     <div id="toast-notification"></div>
 
 <script>
+// ==================================================================
+// سروس ورکر کو رجسٹر کرنے کا کوڈ
+// ==================================================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker: Registered successfully'))
+            .catch(err => console.log(`Service Worker: Registration Error: ${err}`));
+    });
+}
+// ==================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    // آپ کا باقی تمام جاوا اسکرپٹ کوڈ یہاں سے شروع ہوتا ہے
     let currentDate = new Date();
     let attendanceData = { sections: { section1: { students: [], attendance: {} }, section2: { students: [], attendance: {} }, section3: { students: [], attendance: {} } }, studentDetails: {} };
     const DATA_KEY = 'attendanceData_v20_no_alpha_bar'; // Updated key
