@@ -2,12 +2,10 @@
   "name": "مفصل حاضری و سبق رجسٹر",
   "short_name": "حاضری رجسٹر",
   "description": "طلباء کی حاضری اور سبق کا ڈیجیٹل رجسٹر",
-  
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f5f7fa",
   "theme_color": "#3498db",
-
   "icons": [
     {
       "src": "./icon-192.png",
